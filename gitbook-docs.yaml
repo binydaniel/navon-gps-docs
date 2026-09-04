@@ -2,6 +2,21 @@ site:
   title: "Navon - Fleet Managment Early Documentation"
   structure:
     - type: section
+      key: section-summary
+      title: "Summary"
+      path: summary
+      default: true
+      children:
+        - type: space
+          key: space-summary
+          title: "Summary"
+          path: summary
+          default: true
+          content:
+            directory: ./summary
+
+  structure:
+    - type: section
       key: section-technical
       title: "Technical"
       path: technical
