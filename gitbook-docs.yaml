@@ -1,9 +1,42 @@
-spaces:
-  - title: "Navon - Fleet Tracking Early Documentation"
-    sections:
-      - title: "Technical"
-        directory: technical
-      - title: "Non-Technical"
-        directory: non-technical
-      - title: "How-Tos"
-        directory: how-tos
+site:
+  title: "Navon - Fleet Managment Early Documentation"
+  structure:
+    - type: section
+      key: section-technical
+      title: "Technical"
+      path: technical
+      default: true
+      children:
+        - type: space
+          key: space-technical
+          title: "Technical"
+          path: technical
+          default: true
+          content:
+            directory: ./technical
+
+    - type: section
+      key: section-non-technical
+      title: "Non-Technical"
+      path: non-technical
+      children:
+        - type: space
+          key: space-non-technical
+          title: "Non-Technical"
+          path: non-technical
+          default: true
+          content:
+            directory: ./non-technical
+
+    - type: section
+      key: section-how-tos
+      title: "How-Tos"
+      path: how-tos
+      children:
+        - type: space
+          key: space-how-tos
+          title: "How-Tos"
+          path: how-tos
+          default: true
+          content:
+            directory: ./how-tos
