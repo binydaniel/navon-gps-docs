@@ -2,8 +2,8 @@
 
 ## GPSTracker - Fleet Management & Telemetry Platform
 
-**Version:** 1.0  
-**Date:** August 2026  
+**Version:** 2.0  
+**Date:** September 2026  
 **Repository:** github.com/binydaniel/MyGpsTracker (private) 
 
 ---
@@ -22,7 +22,8 @@
 10. [Non-Functional Requirements](#10-non-functional-requirements)
 11. [Budget & Cost Estimate](#11-budget--cost-estimate)
 12. [Implementation Roadmap](#12-implementation-roadmap)
-13. [Operational Workflow](#13-operational-workflow)
+
+> Operational onboarding and role workflows are covered in the separate [Workflow Guide](workflow.md).
 
 ---
 
@@ -42,7 +43,6 @@ The system supports:
 - Remote device configuration and command execution (Codec 12)
 - Comprehensive event detection: eco scoring, idling, jamming, movement, speeding
 - Notification engine with configurable thresholds and real-time push
-- Webhook integrations for external system connectivity
 - Biometric authentication on mobile
 - Centralized logging (Seq/Serilog)
 - GPS device simulation for development and testing
@@ -52,11 +52,10 @@ The system supports:
 | User Role | Description |
 |-----------|-------------|
 | System Administrator | Global superuser - manages companies, global settings |
-| Company Admin | Manages users, devices, vehicles, geofences, webhooks within their company |
+| Company Admin | Manages users, devices, vehicles, geofences within their company |
 | Company User | Read-only view of assigned vehicles on the live map |
 | Driver | Read-only view of their own assigned vehicle(s) |
 | Fleet Manager | Monitors fleet via dashboard, map, notifications, and reports |
-| External Systems | Consume webhook events (ERP, dispatch, insurance) |
 
 ---
 
@@ -66,13 +65,13 @@ The system supports:
 
 ```
                          CLIENTS
- +----------+  +------------+  +----------+  +----------+
- | Web App  |  | Android    |  | GPS Sim  |  | Webhook  |
- | (React)  |  | (Capacitor)|  | (Standalone| | Consum. |
- |          |  | Hybrid)    |  | Android) |  |          |
- +----+-----+  +-----+------+  +----+-----+  +----+-----+
-      |              |               |               |
-      +-- REST/HTTP + SignalR (WS) -+               |
+ +----------+  +------------+  +----------+
+ | Web App  |  | Android    |  | GPS Sim  |
+ | (React)  |  | (Capacitor)|  | (Standalone|
+ |          |  | Hybrid)    |  | Android) |
+ +----+-----+  +-----+------+  +----+-----+
+      |              |               |
+      +-- REST/HTTP + SignalR (WS) -+
                    |         TCP Codec 8/12          |
                    +---------+---------+             |
                              |         |             |
@@ -192,8 +191,7 @@ Physical Device (TCP connection)
         4. Geofence evaluation
         5. Per-geofence speeding check
         6. Driving event detection
-        7. Webhook dispatch
-        8. Notification evaluation
+        7. Notification evaluation
     -> SendAckAsync (Codec 8 record count)
 ```
 
@@ -242,7 +240,6 @@ IDeviceProtocol
 | GeofenceCheckService | Features/Geofences/GeofenceCheckService.cs | Real-time geofence evaluation |
 | GeofenceStateCache | Features/Geofences/GeofenceStateCache.cs | Caches inside/outside state per device-geofence |
 | NotificationEvaluatorService | Features/Notifications/NotificationEvaluatorService.cs | Threshold checks with cooldown |
-| WebhookDispatchService | Features/Webhooks/WebhookDispatchService.cs | Outbound HTTP webhook fan-out |
 
 ---
 
@@ -270,7 +267,7 @@ IDeviceProtocol
 | Role | Scope | Can See | Can Manage |
 |------|-------|---------|-----------|
 | SystemAdmin | Global (no company) | All companies, all devices | Companies, global settings |
-| Admin | Company-scoped | All company devices/users | Users, vehicles, geofences, webhooks, device assignment |
+| Admin | Company-scoped | All company devices/users | Users, vehicles, geofences, device assignment |
 | User | Company-scoped | Assigned vehicles only | Nothing (read-only) |
 | Driver | Company-scoped | Assigned vehicles only | Nothing (read-only) |
 
@@ -423,21 +420,7 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | Stored per Reading | In vehicle_telemetry table columns digital_input_1-4, digital_output_1-3 |
 | Immobilizer Control | DOUT 1 used for engine immobilizer via Codec 12 setdigout command |
 
-### F-11: Webhooks
-
-**Backend:** `Features/Webhooks/WebhookFeatures.cs`, `WebhookDispatchService.cs`  
-**Frontend:** `features/webhooks/WebhooksPage.tsx`
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Webhook Registration | Admin creates webhook with URL, secret, optional event type filter |
-| Event Types | location, geofence_enter, geofence_exit, new_device |
-| HMAC Signing | Webhook payload signed with configured secret |
-| Fire-and-Forget | Webhooks dispatched asynchronously, non-blocking |
-| Retry | No retry (fire-and-forget design) |
-| Admin Management | Create, enable/disable, delete webhooks |
-
-### F-12: GPS Simulator App (Standalone Android)
+### F-11: GPS Simulator App (Standalone Android)
 
 **Directory:** `gps-simulator/`  
 **Language:** Kotlin  
@@ -445,10 +428,13 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 
 | Sub-Feature | Description |
 |------------|-------------|
-| IMEI Handshake | Generates unique IMEI (SHA-256 of Android ID + Luhn check) |
+| IMEI Handshake | Generates a unique IMEI (Luhn-validated) per device |
+| Fleet simulation | Runs many independent devices concurrently (Quick Fleet) |
+| Smooth route simulation | Devices drive along a generated gentle arc (no random jumping) |
 | Real GPS | Uses Fused Location Provider for real device location |
 | Foreground Service | Continues sending when app is backgrounded |
-| WakeLock | Prevents CPU sleep during active session |
+| WakeLock + Doze exemption | Keeps CPU/network alive while the screen is locked or the app is in the background |
+| Stop Fleet (ignition OFF) | Sends a final ignition-OFF frame per device before closing sockets |
 | Configurable Interval | 1-60 second send interval |
 | SendConfig | All 17+ IO elements configurable |
 | DIN 1-4 Toggles | Switch controls for digital inputs |
@@ -460,6 +446,7 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | Voltage Settings | External and battery voltage |
 | Sleep Mode | Sleep mode IO element |
 | Odometer | Simulated total odometer |
+| Route preview map | osmdroid polyline preview (no API key required) |
 | Log Viewer | Real-time packet log with scrolling |
 | Packet Counter | Displays packets sent count |
 | Connection Status | Color-coded status indicator |
@@ -486,7 +473,7 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | Digital Input 4 | 247 | DIN 4 |
 | GNSS Status | 69 | 0=jamming, 1-7=fix quality |
 
-### F-13: Mobile Capacitor App
+### F-12: Mobile Capacitor App
 
 **Directory:** `web/android/`  
 **Framework:** Capacitor 8.5 (Hybrid)
@@ -501,20 +488,21 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | Same Web UI | All web features available in mobile shell |
 | MainActivity Plugins | BiometricAuthNative + SecureStoragePluginPlugin registered |
 
-### F-14: Centralized Logging
+### F-13: Centralized Logging
 
-**Backend:** `Program.cs` (Serilog via `UseSerilog()` + `appsettings.json` Serilog section)  
+**Backend:** `Program.cs` (programmatic Serilog: Console + Seq sinks)  
 **Infrastructure:** Seq (Datalust)
 
 | Sub-Feature | Description |
 |------------|-------------|
-| Serilog Integration | ASP.NET Core request logging via `UseSerilog()` |
-| Seq Sink | Ships all logs to Seq via `appsettings.json` Serilog config |
+| Serilog Integration | Programmatic Serilog with `UseSerilog()`, Console sink + Seq sink |
+| Seq Sink | Ships structured logs to Seq via `Seq__Url` env var |
 | Seq Web UI | Accessible via internal port (not exposed publicly in production) |
 | No Authentication | SEQ_FIRSTRUN_NOAUTHENTICATION=true for development |
 | Persistent Storage | Seq data volume mounted |
+| Container Logs | `docker-compose logs api` captures stdout/err (auto-flush enabled) |
 
-### F-15: Dashboard
+### F-14: Dashboard
 
 **Frontend:** `features/dashboard/DashboardPage.tsx`
 
@@ -528,7 +516,7 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | Event Table | Device name, event type (Enter/Exit), geofence name, timestamp |
 | Empty State | Friendly message when no devices or events |
 
-### F-16: Settings
+### F-15: Settings
 
 **Frontend:** `features/settings/SettingsPage.tsx`
 
@@ -540,7 +528,7 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | Trip Ignition Gap | Minutes for trip segmentation |
 | Admin Only | Settings page restricted to Admin and SystemAdmin roles |
 
-### F-17: Multi-Company Device Assignment
+### F-16: Multi-Company Device Assignment
 
 **Backend:** `Features/Devices/DeviceAccess.cs`  
 **Database:** `company_devices` junction table
@@ -669,16 +657,7 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | POST | /api/admin/system/companies/{id}/admins | SystemAdmin | Assign user as company admin |
 | DELETE | /api/admin/system/companies/{id} | SystemAdmin | Delete company (cascades) |
 
-### 6.9 Webhook Endpoints
-
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/webhooks | Staff | List webhooks |
-| POST | /api/webhooks | Staff | Create webhook |
-| DELETE | /api/webhooks/{id} | Staff | Delete webhook |
-| PATCH | /api/webhooks/{id}/toggle | Staff | Enable/disable webhook |
-
-### 6.10 TCP Device Ingestion
+### 6.9 TCP Device Ingestion
 
 | Port | Protocol | Description |
 |------|----------|-------------|
@@ -859,16 +838,7 @@ All events are persisted to device_events table with severity, lat/lng, and JSON
 | data | jsonb | Metadata |
 | created_at | timestamptz | Event time |
 
-**webhooks** - External registrations
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid PK | Auto-generated |
-| url | text | Webhook URL |
-| secret | text | HMAC secret |
-| enabled | boolean DEFAULT true | Is enabled |
-| event_types | text | Comma-separated |
-| created_at | timestamptz | Creation time |
+**notifications** (see 7.4 above) stores alert records; **device_events** store driving/eco events.
 
 ---
 
@@ -967,7 +937,6 @@ cd gps-simulator
 - JWT transmitted via HTTP Authorization header
 - SignalR uses WebSocket with access_token query parameter
 - Production should use HTTPS (TLS termination at reverse proxy)
-- Webhook HMAC signing for outbound event verification
 
 ### 9.5 Mobile Security
 
@@ -1027,15 +996,17 @@ cd gps-simulator
 
 | Service | Spec | Monthly Cost |
 |---------|------|-------------|
-| VPS | 2 vCPU, 4GB RAM, 80GB SSD | $20-40 |
-| PostgreSQL | Included (Docker) | $0 |
-| Seq | Included (Docker) | $0 |
-| Docker Hosting | Same VPS | $0 |
-| Domain + DNS | TLD of your choice | $10-15 |
-| SSL Certificate | Let's Encrypt | $0 |
-| **Total Monthly** | | **$30-55** |
+| VPS | 2 vCPU, 4GB RAM, 80GB SSD | TBD |
+| PostgreSQL | Included (Docker) | TBD |
+| Seq | Included (Docker) | TBD |
+| Docker Hosting | Same VPS | TBD |
+| Domain + DNS | TLD of your choice | TBD |
+| SSL Certificate | Let's Encrypt | TBD |
+| **Total Monthly** | | **TBD** |
 
 ### 11.2 Hardware Costs (Per Device)
+
+> Hardware and device costs are indicative market figures and are not part of the project budget.
 
 | Item | Unit Cost | Quantity | Total |
 |------|-----------|----------|-------|
@@ -1050,16 +1021,16 @@ cd gps-simulator
 | Category | One-Time | Monthly |
 |----------|----------|---------|
 | Development | TBD | - |
-| Infrastructure | - | $30-55 |
+| Infrastructure | - | TBD |
 | Hardware (20 devices) | $1,100-1,800 | $100-200 (SIM) |
-| **Total Year 1** | **TBD** | **$130-255** |
-| **Total Year 2+** | - | **$130-255** |
+| **Total Year 1** | **TBD** | **TBD** |
+| **Total Year 2+** | - | **TBD** |
 
 ### 11.4 Comparison with Commercial Solutions
 
 | Solution | Setup | Monthly (50 vehicles) |
 |----------|-------|----------------------|
-| GPSTracker (this) | TBD | $130-255 |
+| GPSTracker (this) | TBD | TBD |
 | Teltonika Flespi | $0 | $150-300 |
 | GPS-Server.net | $0 | $200-400 |
 | Wialon | $0 | $300-600 |
@@ -1116,7 +1087,6 @@ cd gps-simulator
 - [x] Biometric authentication (fingerprint)
 - [x] Secure credential storage
 - [x] GPS simulator app (standalone Android)
-- [x] Webhook system for external integrations
 - [x] Seq/Serilog centralized logging
 
 ### Phase 6: Future Enhancements (Planned)
@@ -1143,139 +1113,5 @@ cd gps-simulator
 
 ## 13. Operational Workflow
 
-This section describes the complete onboarding and operational workflow for all roles in the GPS Tracker system.
-
-### 13.1 System Bootstrap (Automatic)
-
-The system auto-seeds a **SystemAdmin** account and a **Default** company on first API startup.
-
-- **Credentials**: `admin@gpstracker.local` / `P@ssw0rd` (from `appsettings.json`)
-- **Default company**: "Default" is auto-inserted into the `companies` table
-
-### 13.2 SystemAdmin Setup
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 1.1 | **Login** | Sign in as `admin@gpstracker.local`. You land on the Live Map — all devices across all companies are visible. |
-| 1.2 | **Create companies** | Go to `Administration → Companies`. Create companies for each customer/organization. Each company gets its own isolated fleet of vehicles, devices, users, and geofences. |
-| 1.3 | **Tune company thresholds** | Still on Companies, adjust `offlineThresholdMinutes` (when to flag "no signal") and `tripIgnitionGapMinutes` (trip detection sensitivity) per company. These affect all devices and users under that company. |
-| 1.4 | **Assign an Admin to each company** | Go to `Administration → Companies → Users` for a company. Click "Add" next to an available user to assign them. This person will manage that company's fleet. |
-
-> **Note**: Users must self-register first before a SystemAdmin can assign them.
-
-### 13.3 User Registration (Self-Service)
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 2.1 | **Register** | Any person navigates to the app and clicks "Register." They provide email + password + display name. The account is created with a `User` role and no company — shown as "Pending" in the admin panel. |
-| 2.2 | **Login** | After registration, the user is auto-logged in. Without a company assignment, they see an empty map and no devices. They wait to be linked to a company. |
-
-### 13.4 Device Onboarding (Teltonika Hardware)
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 3.1 | **Power on the device** | A Teltonika FMB-120 (or compatible) is installed in a vehicle and powered on. It auto-connects to the TCP server on port 5027. |
-| 3.2 | **Auto-registration** | The server receives the IMEI handshake, auto-creates a device record with `display_name = IMEI`, and broadcasts a real-time toast to all SystemAdmins: *"New device registered: {IMEI}"*. No manual registration needed. |
-| 3.3 | **Rename (optional)** | SystemAdmin opens `Devices → {device} → Rename` to give it a meaningful name (e.g., "Truck 01"). |
-| 3.4 | **Assign device to company** | On the device detail page, SystemAdmin clicks `Companies → Edit` and selects the company. The device now appears in that company's fleet. A device can belong to multiple companies simultaneously. |
-
-> **Alternative**: SystemAdmin can also manually create a device from the `Devices` page using the "Create device" button (enters IMEI + display name + protocol).
-
-### 13.5 Company Admin Fleet Setup
-
-Performed by the **Company Admin** assigned in Step 1.4.
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 4.1 | **Create vehicles** | Go to `Vehicles → Create vehicle`. Give each vehicle a name (e.g., "Van 12"). A vehicle is a logical container — it will be linked to a device and assigned to drivers. |
-| 4.2 | **Link device to vehicle** | On the `Vehicles` page, click "Link device" for a vehicle. Select the unlinked device (by IMEI or display name) that is already assigned to the company (Step 3.4). One device can link to only one vehicle at a time. |
-| 4.3 | **Link registered users** | Go to `Admin → Link existing`. Enter the email of a user who self-registered. This links them to your company so they can see your fleet. |
-| 4.4 | **Set user role** | For each linked user, click "Role" and assign one of: |
-| | | • **User** — can view all company vehicles on the map |
-| | | • **Admin** — can manage users, devices, vehicles, and geofences for this company |
-| | | • **Driver** — sees only their assigned vehicles |
-| 4.5 | **Assign vehicles to drivers** | For users with the **Driver** role, click "Vehicles" and check the vehicles they should see. This is what controls their map view — they only see assigned vehicles. |
-
-### 13.6 Ongoing Operations
-
-#### SystemAdmin
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 5.1 | **Monitor devices** | `Devices` page — filter/search all devices across all companies, check online/offline status, last seen time. |
-| 5.2 | **Manage company membership** | `Administration → Companies → Users` — add or remove users from any company. |
-| 5.3 | **Activate/deactivate companies** | Toggle a company's active status. Inactive companies are visible to admins but their users may lose access. |
-| 5.4 | **Send remote commands** | `Devices → {device} → Remote commands` — send CPU reset, output control, or parameter changes to online Teltonika devices via Codec 12 over TCP. |
-| 5.5 | **Delete users/companies** | Remove a user entirely (`Administration → Users → Remove`) or delete a company and all its data (`Administration → Companies → Remove`). |
-| 5.5a | **Manage system users** | `Administration → Users` tab — view all registered users, set company assignment, update display names, delete users. |
-| 5.5b | **Manage system companies** | `Administration → Companies` tab — create/edit/delete companies, assign company admins, toggle active status. |
-
-#### Company Admin
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 5.6 | **Manage users** | `Admin` — link new users, change roles, remove users from the company. |
-| 5.7 | **Manage vehicles** | `Vehicles` — create, rename, link/unlink devices, remove vehicles. |
-| 5.8 | **Manage devices** | `Devices` — rename devices, set phone numbers, adjust offline thresholds. |
-| 5.9 | **Configure geofences** | `Geofences` — create geofence zones (circle or polygon), assign vehicles, set speed limits. Violations are logged and trigger notifications. |
-| 5.10 | **Set up webhooks** | `Webhooks` — register HTTP endpoints to receive real-time geofence and location events. |
-| 5.11 | **Adjust settings** | `Settings` — company-wide offline threshold, trip gap, notification preferences. |
-
-#### User
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 5.12 | **View live map** | `Map` — see all company vehicles in real-time with position, speed, and status. |
-| 5.13 | **Check dashboard** | `Dashboard` — overview of vehicle count, online/offline stats, recent geofence events. |
-| 5.14 | **View device details** | `Devices → {device}` — position history map, trip list, power log, device events, geofence violations, live telemetry status. |
-
-#### Driver
-
-| Step | Action | Description |
-|------|--------|-------------|
-| 5.15 | **View assigned vehicles** | `Map` — only their assigned vehicles appear (filtered by `user_vehicles` table). |
-| 5.16 | **View vehicle details** | `Devices → {device}` — same as User but scoped to assigned vehicles only (history, trips, events, power log, violations). |
-
-### 13.7 Summary Flow
-
-```
-SystemAdmin                          Hardware              Company Admin
-    |                                    |                      |
-    +-- 1. Create company                |                      |
-    +-- 2. User self-registers           |                      |
-    +-- 3. Assign user to company        |                      |
-    |                                    |                      |
-    |              4. Device powers on -->                      |
-    |              5. Auto-registers                           |
-    +-- 6. Rename device (opt.)          |                      |
-    +-- 7. Assign device --> company     |                      |
-    |                                    |                      |
-    |                                    +-- 8. Create vehicle  |
-    |                                    +-- 9. Link device     |
-    |                                    +-- 10. Link users     |
-    |                                    +-- 11. Set roles      |
-    |                                    +-- 12. Assign drivers |
-    |                                    |                      |
-    |                                    +-- 13. Create geofences
-    |                                    +-- 14. Set notifications
-    |                                    |                      |
-    |         <------- Live map + real-time tracking -----------+
-```
-
-### 13.8 Role Summary
-
-| Role | Scope | Map View | Can Manage |
-|------|-------|----------|------------|
-| **SystemAdmin** | Global (all companies) | All devices | Users, companies, devices |
-| **Admin** | Company-scoped | All company devices | Users, vehicles, devices, geofences, webhooks, settings |
-| **User** | Company-scoped | All company devices | Nothing (read-only) |
-| **Driver** | Company-scoped | Assigned vehicles only | Nothing (read-only) |
-
-### 13.9 Key Technical Details
-
-- **Device visibility** is controlled by `DeviceAccess.cs` — a single source of truth used by both REST API and SignalR real-time push.
-- **Teltonika protocol**: TCP port 5027, IMEI handshake (2-byte BE length + ASCII IMEI, server responds `0x01`), Codec 8 frames.
-- **Multi-company devices**: A single device can be assigned to multiple companies via the `company_devices` junction table.
-- **One device per vehicle**: The `ux_vehicles_device` unique index enforces that a device links to at most one vehicle at a time.
-- **Role reassignment**: Setting a user's role replaces ALL their current roles with the single new one. `SystemAdmin` can only be granted via bootstrap seeding.
+Onboarding, role setup, and day-to-day operational workflows are maintained in the separate **[Workflow Guide](workflow.md)**.
 
