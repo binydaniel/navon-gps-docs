@@ -1,5 +1,11 @@
 # NavonGPS - Fleet Tracking Early Documentation
 
+## Introduction
+
+An overview of what Navon does, key concepts, and terminology — for stakeholders, product owners, and anyone who wants the big picture without the implementation detail.
+
+→ [Go to Non-Technical docs](../non-technical/README.md)
+
 
 ## Technical
 
@@ -7,11 +13,6 @@ Architecture, system design, and implementation details — for developers and e
 
 → [Go to Technical docs](../technical/README.md)
 
-## Non-Technical
-
-An overview of what NavonGPS does, key concepts, and terminology — for stakeholders, product owners, and anyone who wants the big picture without the implementation detail.
-
-→ [Go to Non-Technical docs](../non-technical/README.md)
 
 ## How-Tos
 
