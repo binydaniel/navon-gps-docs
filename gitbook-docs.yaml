@@ -3,6 +3,19 @@ site:
   title: Navon - Fleet Managment Early Documentation
   structure:
     - type: section
+      key: section-summary
+      title: Summary
+      path: summary
+      default: true
+      children:
+        - type: space
+          key: space-Summary
+          title: Summary
+          path: summary
+          default: true
+          content:
+            directory: ./summary
+    - type: section
       key: section-technical
       title: Technical
       path: technical
