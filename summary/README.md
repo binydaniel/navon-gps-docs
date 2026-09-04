@@ -13,7 +13,7 @@ Step-by-step guides for to test, setup, usage, the current developed system, and
 
 → [Go to How-Tos](../how-tos/README.md)
 
-## For Technical (Techies, Devs)
+## For Technical
 
 Architecture, system design, and implementation details — for developers and software engineers who wants to collaborate.
 
