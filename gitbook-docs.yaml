@@ -1,55 +1,52 @@
 $schema: https://api.gitbook.com/gitbook-docs.yaml
 site:
-  title: "Navon - Fleet Managment Early Documentation"
+  title: Navon - Fleet Managment Early Documentation
   structure:
     - type: section
       key: section-summary
-      title: "Summary"
+      title: Summary
       path: summary
       default: true
       children:
         - type: space
           key: space-summary
-          title: "Summary"
+          title: Summary
           path: summary
           default: true
           content:
             directory: ./summary
-
     - type: section
       key: section-technical
-      title: "Technical"
+      title: Technical
       path: technical
       children:
         - type: space
           key: space-technical
-          title: "Technical"
+          title: Technical
           path: technical
           default: true
           content:
             directory: ./technical
-
     - type: section
       key: section-non-technical
-      title: "Non-Technical"
+      title: Non-Technical
       path: non-technical
       children:
         - type: space
           key: space-non-technical
-          title: "Non-Technical"
+          title: Non-Technical
           path: non-technical
           default: true
           content:
             directory: ./non-technical
-
     - type: section
       key: section-how-tos
-      title: "How-Tos"
+      title: How-Tos
       path: how-tos
       children:
         - type: space
           key: space-how-tos
-          title: "How-Tos"
+          title: How-Tos
           path: how-tos
           default: true
           content:
