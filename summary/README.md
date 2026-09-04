@@ -1,4 +1,4 @@
-# NavonGPS - Fleet Tracking Early Documentation
+# Navon - Fleet Tracking Early Documentation
 
 ## Introduction
 
@@ -7,18 +7,19 @@ An overview of what Navon does, key concepts, and terminology — for stakeholde
 → [Go to Non-Technical docs](../non-technical/README.md)
 
 
-## Technical
+## How-Tos
 
-Architecture, system design, and implementation details — for developers and engineers working on or integrating with the system.
+Step-by-step guides for to test, setup, usage, the current developed system, and troubleshooting.
+
+→ [Go to How-Tos](../how-tos/README.md)
+
+## For Technical (Techies, Devs)
+
+Architecture, system design, and implementation details — for developers and software engineers who wants to collaborate.
 
 → [Go to Technical docs](../technical/README.md)
 
 
-## How-Tos
-
-Step-by-step guides for common tasks — setup, usage, and troubleshooting.
-
-→ [Go to How-Tos](../how-tos/README.md)
 
 ---
 
