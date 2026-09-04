@@ -1,0 +1,9 @@
+spaces:
+  - title: "Navon - Fleet Tracking Early Documentation"
+    sections:
+      - title: "Technical"
+        directory: technical
+      - title: "Non-Technical"
+        directory: non-technical
+      - title: "How-Tos"
+        directory: how-tos
