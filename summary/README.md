@@ -22,4 +22,5 @@ Step-by-step guides for common tasks — setup, usage, and troubleshooting.
 ---
 
 *NOTE: Please read the Non-technical and How-tos documents entirely before asking any questions. I (and Claude.ai) made a lot of effort and time preparing this documents !!!! *
+
 *This documentation is a work in progress and will be updated as the project evolves.*
