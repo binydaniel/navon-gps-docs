@@ -3,6 +3,19 @@ site:
   title: Navon - Fleet Management Early Documentation
   structure:
     - type: section
+      key: section-non-technical
+      title: Project Overview
+      path: non-technical
+      children:
+        - type: space
+          key: space-non-technical
+          title: Project Overview
+          path: non-technical
+          default: true
+          content:
+            directory: ./non-technical
+
+    - type: section
       key: section-summary
       title: Summary
       path: summary
@@ -27,15 +40,4 @@ site:
           default: true
           content:
             directory: ./technical
-    - type: section
-      key: section-non-technical
-      title: Project Overview
-      path: non-technical
-      children:
-        - type: space
-          key: space-non-technical
-          title: Project Overview
-          path: non-technical
-          default: true
-          content:
-            directory: ./non-technical
+
