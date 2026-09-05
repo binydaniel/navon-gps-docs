@@ -13,11 +13,6 @@ An overview of what NavonGPS does, key concepts, and terminology — for stakeho
 
 → [Go to Non-Technical docs](../non-technical/README.md)
 
-## How-Tos
-
-Step-by-step guides for common tasks — setup, usage, and troubleshooting.
-
-→ [Go to How-Tos](../how-tos/README.md)
 
 ---
 
