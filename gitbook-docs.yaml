@@ -29,12 +29,12 @@ site:
             directory: ./technical
     - type: section
       key: section-non-technical
-      title: Non-Technical
+      title: Project Overview
       path: non-technical
       children:
         - type: space
           key: space-non-technical
-          title: Non-Technical
+          title: Project Overview
           path: non-technical
           default: true
           content:
