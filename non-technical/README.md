@@ -1,1117 +1,467 @@
-# Software Requirements Specification (SRS)
+# Navon — Project Guide
 
-## GPSTracker - Fleet Management & Telemetry Platform
-
-**Version:** 2.0  
-**Date:** September 2026  
-**Repository:** github.com/binydaniel/MyGpsTracker (private) 
+> **Audience:** clients, managers, operators, drivers, and everyone who is not writing code.  
+> This guide explains what the project is, where it stands today, and how we all work together. Technical readers should see the [Technical Documentation](TECHNICAL.md).
 
 ---
 
-## Table of Contents
+## 1. Hello and Welcome
 
-1. [Introduction](#1-introduction)
-2. [System Overview](#2-system-overview)
-3. [Technology Stack](#3-technology-stack)
-4. [Architecture](#4-architecture)
-5. [Detailed Feature Specifications](#5-detailed-feature-specifications)
-6. [API Reference](#6-api-reference)
-7. [Database Schema](#7-database-schema)
-8. [Deployment & Infrastructure](#8-deployment--infrastructure)
-9. [Security](#9-security)
-10. [Non-Functional Requirements](#10-non-functional-requirements)
-11. [Budget & Cost Estimate](#11-budget--cost-estimate)
-12. [Implementation Roadmap](#12-implementation-roadmap)
+This booklet is your non-technical companion to the Navon project — a vehicle tracking system. You do not need to understand programming, databases, or networking to follow it. It tells you:
 
-> Operational onboarding and role workflows are covered in the separate [Workflow Guide](workflow.md).
+- **What we are building** and why it matters,
+- **Where the project stands today** (what is real, what is still open),
+- **What has been done** so far,
+- **What is still to be done**,
+- **How to use the system day-to-day** (step-by-step guides),
+- **How to get involved** and how the team works together — including a short *"How can I contribute?"* questionnaire and the questions we still need to answer together to move the project forward.
 
 ---
 
-## 1. Introduction
+## 2. What Is Navon?
 
-### 1.1 Purpose
+**The project is now called Navon.** (The name is a first decision. The domain `navon.com` is not available, so the web address is still open — and the brand — logo, colors, fonts — is wide open too; that is something we decide together.)
 
-GPSTracker is a real-time fleet management and telemetry platform that ingests GPS data from physical tracking devices (Teltonika FMB series, Queclink, GT06), processes telemetry in real-time, and presents fleet intelligence through a web dashboard, Android mobile app, and a standalone GPS simulator for testing.
+Navon is a **fleet management and vehicle-tracking platform**. It helps organizations know **where their vehicles are, right now**, and what those vehicles are doing.
 
-### 1.2 Scope
+Imagine you manage a fleet of delivery vans, service cars, or construction trucks. With Navon you can:
 
-The system supports:
+- See **every vehicle on a live map** — where it is, how fast it is going, and whether the engine is on.
+- **Draw safe zones** around places like your yard or a client site, and be **alerted when a vehicle enters or leaves** a zone.
+- Get **warnings** for unsafe or unusual behavior — speeding, harsh braking, harsh cornering, a weak battery, or a vehicle going offline.
+- Look back at **where a vehicle has been** (history), what **trips** it made, and its **fuel/battery and power health** over time.
+- Manage everything from a **web dashboard**, an **Android mobile app** (with fingerprint login), and — for testing — a **GPS simulator** that acts like a real tracker.
 
-- Multi-tenant fleet management (companies, users, drivers, vehicles)
-- Real-time vehicle tracking with live map
-- Geofencing with enter/exit detection, violations, and per-zone speed limits
-- Remote device configuration and command execution (Codec 12)
-- Comprehensive event detection: eco scoring, idling, jamming, movement, speeding
-- Notification engine with configurable thresholds and real-time push
-- Biometric authentication on mobile
-- Centralized logging (Seq/Serilog)
-- GPS device simulation for development and testing
+The system is designed from the ground up for **multiple companies (tenants)**. Each customer or organization has its own private area — its own vehicles, drivers, settings, and alerts — while a system administrator can see and manage everyone.
 
-### 1.3 Target Users
+### Why it matters
 
-| User Role | Description |
-|-----------|-------------|
-| System Administrator | Global superuser - manages companies, global settings |
-| Company Admin | Manages users, devices, vehicles, geofences within their company |
-| Company User | Read-only view of assigned vehicles on the live map |
-| Driver | Read-only view of their own assigned vehicle(s) |
-| Fleet Manager | Monitors fleet via dashboard, map, notifications, and reports |
+- **Safety** — spot dangerous driving before it causes an accident.
+- **Security** — know when a vehicle leaves an approved area.
+- **Savings** — reduce fuel waste, idling, and unauthorized use.
+- **Trust** — share accurate, real-time information with customers and management.
+- **Growth** — one platform, many companies, no per-client installations.
 
 ---
 
-## 2. System Overview
+## 3. Where the Project Stands Today
 
-### 2.1 High-Level Architecture
+The system works — this is a **working foundation, not yet a finished product or a finished business**.
 
-```
-                         CLIENTS
- +----------+  +------------+  +----------+
- | Web App  |  | Android    |  | GPS Sim  |
- | (React)  |  | (Capacitor)|  | (Standalone|
- |          |  | Hybrid)    |  | Android) |
- +----+-----+  +-----+------+  +----+-----+
-      |              |               |
-      +-- REST/HTTP + SignalR (WS) -+
-                   |         TCP Codec 8/12          |
-                   +---------+---------+             |
-                             |         |             |
-                   +---------+---------+-------------+
-                   |     API SERVER                   |
-                   |  ASP.NET Core 9 / C#            |
-                   |  MediatR + Dapper + SignalR     |
-                   +--+----------+----------+--------+
-                      |          |          |
-             +--------+--+ +----+----+ +---+-------+
-             | PostgreSQL | | Seq     | | nginx     |
-             | + PostGIS  | |         | | (proxy)   |
-             |            | |         | |           |
-             +------------+ +---------+ +-----------+
-```
+- **The software is built and running.** A good amount of time has been spent building the actual working system. The goal at this stage was not to make it look like a finished commercial product, but to prove that the idea works and to build the important features behind it. See [What Has Been Done](#5-what-has-been-done) and [What Still Needs to Be Done](#6-what-still-needs-to-be-done).
+- **Hosting is temporary.** The system is currently hosted on a server at **akako.net:8082**. This is a development and testing setup (the server also runs other projects its owner is involved in), so it should not be considered the final hosting. There is no dedicated domain yet.
+- **The Android app works but is not published.** It is mainly used for testing and development. Final app configuration, testing, publishing, and the other Play Store requirements still need to be done.
+- **UI/UX and product design are still to come.** The current interface was made to be usable and to test functionality. It is not the final design. We still need to improve the look and feel, make the system easier to use, settle the overall design style, and make the web and mobile applications feel like one complete product.
+- **Branding is not finalized.** We need to decide the logo, colors, fonts, and general identity of the platform — the name is now **Navon**. This is something we can all work on together, because the product should have its own identity before we present it publicly.
+- **The business side is open.** There is no finalized business plan, pricing model, target-customer definition, sales strategy, or clear decision on how the service will be offered. The technology is one part of the project; turning it into a real business requires working on these areas too.
+- **More features are planned and some need refinement.** Fuel estimation, driver performance scoring, route optimization, maintenance reminders, better notifications, analytics, data export, and other improvements. Some existing features also need more real-world testing.
 
-### 2.2 Key Components
-
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| API Server | ASP.NET Core 9 | REST API + SignalR hub + TCP device ingestion |
-| Web Frontend | React 18 + Vite + TailwindCSS | Dashboard, live map, admin UI |
-| PostgreSQL + PostGIS | PostGIS 16-3.4 | Spatial database with geofence queries |
-| Seq | Seq (Datalust) | Centralized structured logging UI |
-| GPS Simulator | Kotlin/Android | Simulates Teltonika devices for testing |
-| Mobile App | Capacitor (Android) | Biometric-authenticated mobile access |
-
-### 2.3 Docker Services
-
-| Service | Image | Port Mapping | Volume |
-|---------|-------|-------------|--------|
-| db | postgis/postgis:16-3.4 | 5433:5432 | gpstracker-db-data |
-| api | Custom build | 8081:8080, 5027:5027, 5011:5011, 5023:5023 | - |
-| seq | datalust/seq:latest | 8083:80, 5341:5341 | seq-data |
-| web | Custom build (nginx) | 8082:80 | - |
+**Why we are sharing this now:** not to say everything is ready, but so everyone can see what has already been done and we can discuss what to build from here.
 
 ---
 
-## 3. Technology Stack
+## 4. Who Uses It
 
-### 3.1 Backend
-
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| .NET | 9.0 | Runtime |
-| ASP.NET Core | 9.0.9 | Web framework, routing, middleware |
-| Entity Framework Core | 9.0.9 | ASP.NET Core Identity tables only |
-| Dapper | 2.1.35 | High-performance data access for CQRS |
-| MediatR | 12.4.1 | In-process command/query mediator |
-| Npgsql | 9.0.3 | PostgreSQL ADO.NET driver |
-| Serilog.AspNetCore | 8.0.3 | Structured logging |
-| Serilog.Sinks.Seq | 9.0.0 | Log shipping to Seq |
-| JWT Bearer Auth | 9.0.9 | Stateless API authentication |
-| Swashbuckle | 6.7.3 | Swagger/OpenAPI documentation |
-| SignalR | Built-in | Real-time WebSocket push |
-
-### 3.2 Frontend
-
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| React | 18.3.1 | UI framework |
-| TypeScript | 5.6.2 | Static type checking |
-| Vite | 5.4.8 | Build tool, HMR |
-| TailwindCSS | 3.4.13 | Utility-first CSS |
-| React Router | 6.26.2 | Client-side hash routing |
-| TanStack React Query | 5.59.16 | Server state, caching, mutations |
-| Leaflet + React-Leaflet | 1.9.4 / 4.2.1 | Map rendering |
-| @microsoft/signalr | 8.0.7 | Real-time WebSocket client |
-| Capacitor | 8.5.0 | Android hybrid wrapper |
-
-### 3.3 GPS Simulator App (Standalone)
-
-| Technology | Purpose |
-|-----------|---------|
-| Kotlin | Language |
-| Android SDK | Platform (minSdk 26) |
-| java.net.Socket | TCP communication |
-| Fused Location Provider | Real GPS hardware location |
-| Foreground Service | Persistent sending while app is backgrounded |
-| WakeLock API | Prevent CPU sleep during sending |
-
-### 3.4 Mobile App (Capacitor Hybrid)
-
-| Technology | Purpose |
-|-----------|---------|
-| @aparajita/capacitor-biometric-auth | Fingerprint / face login |
-| capacitor-secure-storage-plugin | Encrypted credential storage |
-| MainActivity (Java) | Plugin registration |
-| Same React web UI | Wrapped in Capacitor shell |
+| Who | What they do |
+|-----|--------------|
+| **System Administrator** | Owns the whole platform. Creates companies, assigns their admins, watches all devices, and can send commands to trackers. |
+| **Company Admin** | Runs one company's fleet day-to-day. Adds users and vehicles, links trackers, draws safe zones, and tunes settings. |
+| **Company User** | Views the company's vehicles on the map and dashboard (read-only). |
+| **Driver** | Sees only their own assigned vehicle(s) (read-only). |
+| **Fleet/Operations Manager** | Watches the dashboard, live map, and alerts to keep the fleet running smoothly. |
 
 ---
 
-## 4. Architecture
+## 5. What Has Been Done
 
-### 4.1 Backend: CQRS with MediatR + Dapper
+The core platform is built and working. Here is the plain-language scoreboard.
 
-- **Commands** (writes): MediatR IRequest handlers, raw Dapper SQL, manual NpgsqlTransaction
-- **Queries** (reads): MediatR handlers, Dapper SQL, optimized PostgreSQL indexes
-- **EF Core** reserved only for ASP.NET Core Identity (AspNetUsers, AspNetRoles, AspNetUserRoles)
-- **No controllers contain business logic** - all logic in feature handlers
+### Done and in use
 
-### 4.2 Telemetry Ingestion Pipeline
+- ✅ **Accounts & login** — people register with email/password; the mobile app can use fingerprint unlock.
+- ✅ **Multi-company structure** — each organization gets its own isolated fleet and settings.
+- ✅ **Live map** — vehicles appear in real time with speed, engine state, and power status (green = external power, yellow = battery, gray = offline).
+- ✅ **Trackers connect automatically** — a new device only needs to be powered on and set server address; it registers itself. No technical setup required.
+- ✅ **Vehicles & drivers** — link a tracker to a vehicle and assign vehicles to drivers. One device, one vehicle.
+- ✅ **Safe zones (geofences)** — draw a circle or a polygon on the map, set a speed limit for the zone, and get alerts for enter/exit and speeding.
+- ✅ **Alerts & notifications** — warnings for speeding, hard braking, hard cornering, low battery, going offline, and geofence speeding, with a small delay guard so you are not flooded.
+- ✅ **Driving behavior events** — the system logs harsh acceleration, hard braking, cornering, idling, driving with the engine off, and signal jamming.
+- ✅ **Power monitoring** — track external/battery voltage and know which vehicles are running on backup power.
+- ✅ **History & trips** — replay where a vehicle went and see its trips (engine-on segments).
+- ✅ **Remote control of devices** — send commands to a tracker (e.g., reset or config) from the dashboard.
+- ✅ **Android mobile app** — the dashboard in your pocket, secured with biometrics.
+- ✅ **GPS simulator** — a training/testing tool that mimics one or many trackers driving smooth, realistic routes — ideal for demos, training, and testing without hardware.
+- ✅ **Central logging** — all system activity is logged in one place (Seq) so problems are easier to find and fix, and it works for development too.
 
-```
-Physical Device (TCP connection)
-  -> DeviceTcpListener.AcceptClientAsync()
-    -> Protocol Handshake (IMEI identification)
-    -> DeviceConnectionRegistry.Register(imei, stream)
-    -> Frame Loop:
-      -> IDeviceFramer.ReadFrameAsync()      -- TCP frame delineation
-      -> IProtocolParser.TryParse()           -- binary decode
-      -> ITelemetryNormalizer.Normalize()     -- IO element mapping
-      -> ProcessGpsTelemetry.Command          -- MediatR dispatch
-        1. Persist to vehicle_telemetry (PostGIS geography POINT)
-        2. Push LocationUpdate via SignalR
-        3. IgnitionEvent (if state changed)
-        4. Geofence evaluation
-        5. Per-geofence speeding check
-        6. Driving event detection
-        7. Notification evaluation
-    -> SendAckAsync (Codec 8 record count)
-```
-
-### 4.3 SignalR Real-Time Hub
-
-**Hub class:** `LiveTrackingHub`
-
-**Groups:**
-- `device-{imei}` - subscribers tracking a specific device
-- `company-{companyId}` - all users in a company (notifications)
-
-**Messages (Server to Client):**
-
-| Message | Trigger |
-|---------|---------|
-| LocationUpdate | Every telemetry point (lat, lng, speed, ignition, heading, DIO, accel, odometer, etc.) |
-| IgnitionEvent | Ignition state changes |
-| GeofenceEvent | Enter/exit geofence |
-| GeofenceViolation | Vehicle exits assigned geofence |
-| GeofenceViolationResolved | Vehicle re-enters geofence |
-| Notification | Alert threshold exceeded |
-| NewDeviceRegistered | Unknown device connects |
-
-### 4.4 Protocol Abstraction
-
-```
-IDeviceProtocol
-  +-- Name: string              ("teltonika", "queclink", "gt06")
-  +-- CreateFramer()      -> IDeviceFramer      (TCP frame delineation)
-  +-- CreateHandshake()   -> IDeviceHandshake   (IMEI identification)
-  +-- CreateParser()      -> IProtocolParser    (bytes -> ParsedFrame)
-  +-- CreateNormalizer()  -> ITelemetryNormalizer (IO -> NormalizedTelemetry)
-```
-
-### 4.5 Key Backend Components
-
-| Component | File | Purpose |
-|-----------|------|---------|
-| DeviceTcpListener | Ingestion/Sockets/DeviceTcpListener.cs | Accepts TCP connections, runs protocol loop |
-| DeviceConnectionRegistry | Ingestion/Sockets/DeviceConnectionRegistry.cs | In-memory IMEI->Stream lookup for Codec 12 |
-| Codec12CommandBuilder | Ingestion/Teltonika/Codec12CommandBuilder.cs | Builds binary Codec 12 frames with CRC32 |
-| TeltonikaNormalizer | Ingestion/Teltonika/TeltonikaNormalizer.cs | Maps 17+ IO elements to NormalizedTelemetry |
-| IoElementIds | Ingestion/Teltonika/IoElementIds.cs | Constants for all Teltonika FMB IO element IDs |
-| ProcessGpsTelemetry | Features/Telemetry/ProcessGpsTelemetry.cs | Main telemetry pipeline |
-| DeviceIgnitionStateCache | Features/Telemetry/DeviceIgnitionStateCache.cs | Tracks ignition state for change detection |
-| GeofenceCheckService | Features/Geofences/GeofenceCheckService.cs | Real-time geofence evaluation |
-| GeofenceStateCache | Features/Geofences/GeofenceStateCache.cs | Caches inside/outside state per device-geofence |
-| NotificationEvaluatorService | Features/Notifications/NotificationEvaluatorService.cs | Threshold checks with cooldown |
+> Not everything is 100% verified: remote commands to physical devices, harsh-acceleration detection,warning for speeding notification have been implemented but not fully validated with real hardware on the road. That is part of the **to-do** below.
 
 ---
 
-## 5. Detailed Feature Specifications
+## 6. What Still Needs to Be Done
 
-### F-01: Authentication & Authorization
+These will be the upcoming agreed-upon next steps. They help the team know what to work on and what to expect.
 
-**Backend:** `Features/Auth/` + `Api/Controllers/AuthController.cs`  
-**Frontend:** `features/auth/` (LoginPage.tsx, RegisterPage.tsx, AuthContext.tsx)
+### Finish and validate (short term)
 
-| Sub-Feature | Description |
-|------------|-------------|
-| User Registration | Email + password, creates AspNetUsers row via ASP.NET Core Identity |
-| Login | Credentials validated, signed JWT returned with roles, companyId, email |
-| JWT Token | Contains sub (user ID), email, role array, company_id; validated on every request |
-| Password Change | Requires current password, server-side validation |
-| Role System | 4 roles: SystemAdmin, Admin, User, Driver |
-| Multi-Tenant Scoping | Data filtered by company_id on all queries |
-| Biometric Auth (Mobile) | Capacitor biometric plugin + SecureStorage for credential caching |
-| Session Persistence | JWT stored in localStorage; auto-refresh on page load via /me endpoint |
-| Credential Caching | On login, credentials saved to SecureStorage; on logout, cleared |
+- ⏳ **Validate remote commands** (CPU reset, settings via the mobile/data connection) with real trackers on the road.
+- ⏳ **Fine-tune driving alerts** (hard acceleration/braking/curve) using real driving data.
+- ⏳ **Round out reports and exports** so management can pull data easily.
 
-**Role Permissions Matrix:**
+### Planned improvements (medium term)
 
-| Role | Scope | Can See | Can Manage |
-|------|-------|---------|-----------|
-| SystemAdmin | Global (no company) | All companies, all devices | Companies, global settings |
-| Admin | Company-scoped | All company devices/users | Users, vehicles, geofences, device assignment |
-| User | Company-scoped | Assigned vehicles only | Nothing (read-only) |
-| Driver | Company-scoped | Assigned vehicles only | Nothing (read-only) |
+- Fuel-consumption estimation
+- Driver behavior scoring and ranking (using smart analysis)
+- Route optimization
+- Scheduled maintenance alerts (service reminders)
+- Multi-language support (Afan Oromo, Amharic, …)
+- iOS mobile app
+- Push notifications to phones (even when the app is closed)
+- Data export (CSV/Excel/PDF)
+- Live dashboard analytics charts and geofence heatmaps
+- Two-factor authentication and audit trails for admins
+- Integration with more devices
 
-### F-02: Device Management
+### Bigger ideas (long term)
 
-**Backend:** `Features/Devices/DeviceFeatures.cs`, `DeviceAccess.cs`  
-**Frontend:** `features/devices/DevicesPage.tsx`, `DeviceDetailPage.tsx`
+- OBD-II engine data extensions
+- Customer/CRM management built into the platform
+- Full Fleet management system
+- Integration with ERP systems (Erpnext, Odoo...)
 
-| Sub-Feature | Description |
-|------------|-------------|
-| Auto-Registration | Devices register on first telemetry connection (RegisterDevice command) |
-| Device List | Admin sees all company devices (via company_devices junction); User/Driver sees assigned only |
-| Device Detail | IMEI, model, protocol, phone number, codec version, offline threshold, created date |
-| Device History | Position history with polyline replay on map, time range filtering |
-| Trip History | Trips derived from ignition transitions with distance, max speed, start/end times |
-| Device Events | Eco scoring, idling, jamming, movement events displayed in table |
-| Power Log | 24h voltage/battery history table |
-| Geofence Violations | Violations for the device displayed on detail page |
-| Device Search | Search/filter devices by name or IMEI |
-| Edit Device | Admin can update display name, offline threshold |
-| Delete Device | Admin can remove device (cascades to vehicle_telemetry, device_events) |
-| Multi-Company Assignment | company_devices junction table: one device visible to multiple companies |
-| Vehicle Assignment | Device to Vehicle 1:1 unique mapping (unique index on vehicles.device_id) |
-| SIM / Phone Number | Admin can set/edit phone number for SMS from device detail page |
-| SMS Integration | sms:{number} link for sending SMS to device SIM card |
-
-### F-03: Live Vehicle Tracking
-
-**Frontend:** `features/tracking/LiveMapPage.tsx`, `LiveMap.tsx`, `DeviceMarker.tsx`  
-**Backend:** `Features/Tracking/LiveTrackingHub.cs`
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Real-Time Map | Leaflet map with live-updating device markers via SignalR |
-| Marker Colors | Green = external power, Yellow = battery, Gray = offline/not reporting |
-| Battery Badge | Yellow battery icon on marker when on battery power |
-| Ignition Badge | ON/OFF indicator in marker tooltip and sidebar list |
-| Device Sidebar | Scrollable list of all devices with name, status, speed, last update |
-| Device Selection | Click device on map or sidebar to inspect details |
-| Offline Detection | Configurable threshold (default 10 min per company) |
-| Position Merging | SignalR live position wins; REST latest location as fallback |
-| Telemetry Detail | DIN 1-4, DOUT 1-3, accelerometer XYZ, GSM signal, odometer, sleep mode, movement |
-
-### F-04: Geofencing
-
-**Backend:** `Features/Geofences/GeofenceFeatures.cs`, `GeofenceCheckService.cs`, `GeofenceStateCache.cs`  
-**Frontend:** `features/geofences/GeofencesPage.tsx`
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Circle Geofence | Center (lat/lng) + radius in meters |
-| Polygon Geofence | WKT polygon string stored in polygon_wkt |
-| Geofence-Vehicle Mapping | Many-to-many via vehicle_geofences junction table |
-| Enter/Exit Detection | Real-time on every telemetry point via GeofenceCheckService |
-| Violation Tracking | geofence_violations table: enter time, resolved time, location |
-| Active Violations | Live list of vehicles currently outside assigned geofences |
-| Speed Limit per Zone | speed_limit_kph on geofences - speeding generates notification |
-| Geofence Events | Recent enter/exit events displayed on dashboard |
-| PostGIS ST_Contains | Spatial query for polygon containment |
-| Haversine Distance | Circle containment via distance calculation |
-| State Cache | In-memory cache avoids redundant DB queries for same device-geofence pair |
-
-### F-05: Remote Device Configuration (Codec 12)
-
-**Backend:** `Features/Devices/DeviceCommandFeatures.cs` + `Ingestion/Teltonika/Codec12CommandBuilder.cs`  
-**Frontend:** `features/devices/DeviceDetailPage.tsx` (Remote Commands card)
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Send Arbitrary Command | Text input: setparam, getinfo, getver, etc. |
-| Quick Buttons | One-click: getinfo, getver, getstatus, ggps, flush, setparam APN |
-| CPU Reset | Confirmation dialog before sending cpureset |
-| Engine Immobilizer | setdigout 1 (activate) / setdigout 0 (deactivate) |
-| Codec 12 Frame Builder | Binary protocol: 0x00 + length(2B) + ASCII command + CRC32 |
-| Connection Registry | In-memory ConcurrentDictionary with WeakReference to TCP streams |
-| Command Delivery | Finds live TCP stream for device IMEI, writes Codec 12 frame |
-| Online Indicator | Commands only work when device is connected (port 5027) |
-
-### F-06: Notification Engine
-
-**Backend:** `Features/Notifications/NotificationEvaluatorService.cs`, `NotificationFeatures.cs`  
-**Frontend:** `features/notifications/` (NotificationBanner.tsx), `features/settings/SettingsPage.tsx`
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Threshold-Based Alerts | Configurable per company, per alert type |
-| Alert Types | speeding, hard_brake, hard_curve, low_battery, offline, geofence_speeding |
-| Configurable Thresholds | Speed (km/h), G-force (brake/curve), voltage (battery) |
-| 2-Minute Cooldown | Prevents alert flooding for same device+type |
-| Delta Detection | Heading delta (>30 degrees), speed delta (>20 km/h) between readings |
-| Real-Time Push | SignalR Notification message to company group |
-| Notification Persistence | Stored in notifications table with severity, read status |
-| Unread Count | Badge count on notification bell |
-| Mobile Push Toast | In-app banner for new alerts |
-| Enable/Disable per Type | Admin can toggle each alert type independently |
-
-### F-07: Eco Scoring & Driving Events
-
-**Backend:** `Features/Telemetry/ProcessGpsTelemetry.cs` (DetectDrivingEventsAsync)
-
-| Event Type | Detection Logic | IO Elements Used |
-|-----------|----------------|-----------------|
-| Harsh Acceleration | abs_acceleration > 400 (4.0 m/s2) | ID 23 |
-| Hard Braking | Speed delta > 20 km/h between consecutive readings | Speed field |
-| Hard Cornering | Heading delta > 30 degrees between consecutive readings | Angle field |
-| Idling | Speed=0 + Ignition=ON for >5 minutes | Speed, Ignition |
-| Movement While Off | Movement IO=1 + Ignition=OFF | ID 240 |
-| Signal Jamming | GNSS status=0 while Ignition=ON | ID 69 |
-| Low GSM Signal | GSM signal <= 5 while Ignition=ON | ID 21 |
-
-All events are persisted to device_events table with severity, lat/lng, and JSON data payload.
-
-### F-08: Per-Geofence Speeding
-
-**Backend:** `Features/Telemetry/ProcessGpsTelemetry.cs` (CheckGeofenceSpeedingAsync)
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Speed Limit per Geofence | Admin sets speed_limit_kph when creating/editing geofence |
-| Real-Time Check | Every telemetry point checked against assigned geofence speed limits |
-| Haversine Distance | Distance from vehicle to geofence center calculated |
-| Threshold | Alert triggers when speed exceeds limit + 2 km/h buffer |
-| Notification | Geofence speeding notification with zone name, vehicle speed, limit |
-| Severity | Warning level |
-
-### F-09: Power Monitoring
-
-**Backend:** ProcessGpsTelemetry computes power source from voltages  
-**Frontend:** `DeviceDetailPage.tsx` (Power Log table)
-
-| Sub-Feature | Description |
-|------------|-------------|
-| External Voltage | IO element 66, stored as voltage (raw/1000) |
-| Battery Voltage | IO element 67, stored as voltage (raw/1000) |
-| Power Source Computation | external if >6.0V, battery if >2.0V, else off |
-| Power Log API | GET /api/devices/{id}/power-log - 24h history |
-| Power Log UI | Table showing timestamp, external V, battery V, source |
-| Marker Color | Green=external, Yellow=battery, Gray=off |
-
-### F-10: Digital I/O Monitoring
-
-**Backend:** TeltonikaNormalizer maps DIN/DOUT IO elements  
-**Frontend:** DeviceDetailPage.tsx (Telemetry tab)
-
-| Sub-Feature | Description |
-|------------|-------------|
-| DIN 1-4 | Digital inputs: IO IDs 1, 2, 3, 247 |
-| DOUT 1-3 | Digital outputs: IO IDs 33, 34, 35 |
-| Live via SignalR | All DIO values pushed with every LocationUpdate |
-| Stored per Reading | In vehicle_telemetry table columns digital_input_1-4, digital_output_1-3 |
-| Immobilizer Control | DOUT 1 used for engine immobilizer via Codec 12 setdigout command |
-
-### F-11: GPS Simulator App (Standalone Android)
-
-**Directory:** `gps-simulator/`  
-**Language:** Kotlin  
-**Protocol:** Teltonika Codec 8 (binary TCP to port 5027)
-
-| Sub-Feature | Description |
-|------------|-------------|
-| IMEI Handshake | Generates a unique IMEI (Luhn-validated) per device |
-| Fleet simulation | Runs many independent devices concurrently (Quick Fleet) |
-| Smooth route simulation | Devices drive along a generated gentle arc (no random jumping) |
-| Real GPS | Uses Fused Location Provider for real device location |
-| Foreground Service | Continues sending when app is backgrounded |
-| WakeLock + Doze exemption | Keeps CPU/network alive while the screen is locked or the app is in the background |
-| Stop Fleet (ignition OFF) | Sends a final ignition-OFF frame per device before closing sockets |
-| Configurable Interval | 1-60 second send interval |
-| SendConfig | All 17+ IO elements configurable |
-| DIN 1-4 Toggles | Switch controls for digital inputs |
-| DOUT 1-3 Toggles | Switch controls for digital outputs |
-| Ignition Toggle | Mandatory ON to start sending |
-| Jamming Toggle | Simulates GNSS jamming (GnssStatus=0) |
-| GSM Signal Input | Configurable signal strength (0-31) |
-| Accelerometer | Configurable X/Y/Z acceleration values |
-| Voltage Settings | External and battery voltage |
-| Sleep Mode | Sleep mode IO element |
-| Odometer | Simulated total odometer |
-| Route preview map | osmdroid polyline preview (no API key required) |
-| Log Viewer | Real-time packet log with scrolling |
-| Packet Counter | Displays packets sent count |
-| Connection Status | Color-coded status indicator |
-
-**Codec 8 IO Elements Supported:**
-
-| IO Element | ID | Description |
-|-----------|-----|-------------|
-| Digital Input 1 | 1 | DIN 1 |
-| Digital Input 2 | 2 | DIN 2 |
-| Digital Input 3 | 3 | DIN 3 |
-| Accelerometer X | 17 | X-axis acceleration |
-| Accelerometer Y | 18 | Y-axis acceleration |
-| Accelerometer Z | 19 | Z-axis acceleration |
-| Absolute Acceleration | 23 | Total acceleration magnitude |
-| Total Odometer | 16 | Odometer in meters |
-| GSM Signal | 21 | Signal strength (0-31) |
-| Sleep Mode | 200 | Device sleep state |
-| Digital Output 1 | 33 | DOUT 1 |
-| Digital Output 2 | 34 | DOUT 2 |
-| Digital Output 3 | 35 | DOUT 3 |
-| Ignition | 239 | Ignition state |
-| Movement | 240 | Movement detection |
-| Digital Input 4 | 247 | DIN 4 |
-| GNSS Status | 69 | 0=jamming, 1-7=fix quality |
-
-### F-12: Mobile Capacitor App
-
-**Directory:** `web/android/`  
-**Framework:** Capacitor 8.5 (Hybrid)
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Biometric Auth | Fingerprint / face login on app start |
-| Credential Caching | Saved to SecureStorage on login, auto-loaded on next launch |
-| Auto-Biometric | If credentials cached, biometric prompt shown immediately |
-| Manual Login | Fallback to email/password form |
-| "Sign in with biometrics" | Explicit button for biometric auth |
-| Same Web UI | All web features available in mobile shell |
-| MainActivity Plugins | BiometricAuthNative + SecureStoragePluginPlugin registered |
-
-### F-13: Centralized Logging
-
-**Backend:** `Program.cs` (programmatic Serilog: Console + Seq sinks)  
-**Infrastructure:** Seq (Datalust)
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Serilog Integration | Programmatic Serilog with `UseSerilog()`, Console sink + Seq sink |
-| Seq Sink | Ships structured logs to Seq via `Seq__Url` env var |
-| Seq Web UI | Accessible via internal port (not exposed publicly in production) |
-| No Authentication | SEQ_FIRSTRUN_NOAUTHENTICATION=true for development |
-| Persistent Storage | Seq data volume mounted |
-| Container Logs | `docker-compose logs api` captures stdout/err (auto-flush enabled) |
-
-### F-14: Dashboard
-
-**Frontend:** `features/dashboard/DashboardPage.tsx`
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Welcome Message | Personalized greeting with company name |
-| Device Statistics | Total devices, online now, offline count |
-| Online Detection | Devices reporting within last 10 minutes considered online |
-| Quick Links | Live Map, Devices, Admin (if Admin), Companies (if SystemAdmin) |
-| Geofence Events | Recent 8 geofence enter/exit events |
-| Event Table | Device name, event type (Enter/Exit), geofence name, timestamp |
-| Empty State | Friendly message when no devices or events |
-
-### F-15: Settings
-
-**Frontend:** `features/settings/SettingsPage.tsx`
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Thresholds Tab | Configure alert threshold values per alert type |
-| Notification Preferences | Enable/disable notifications per alert type |
-| Company Offline Threshold | Minutes before device shown as offline |
-| Trip Ignition Gap | Minutes for trip segmentation |
-| Admin Only | Settings page restricted to Admin and SystemAdmin roles |
-
-### F-16: Multi-Company Device Assignment
-
-**Backend:** `Features/Devices/DeviceAccess.cs`  
-**Database:** `company_devices` junction table
-
-| Sub-Feature | Description |
-|------------|-------------|
-| Junction Table | company_devices (company_id, device_id) - many-to-many |
-| Admin View | Sees all devices assigned to their company |
-| User/Driver View | Sees only devices linked to their assigned vehicles |
-| Device Access Layer | DeviceAccess.cs computes visible device IDs based on role |
-| Multi-Tenant | One device can be visible to multiple companies simultaneously |
+> **How to add to this list:** the Product Owner collects and prioritizes requests. See [Working Together](#8-working-together) for how to raise an idea.
 
 ---
 
-## 6. API Reference
+## 7. How-To Guides (Day-to-Day)
 
-### 6.1 Authentication Endpoints
+### 7.1 Get an account
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| POST | /api/auth/register | Anonymous | Register new user |
-| POST | /api/auth/login | Anonymous | Login, returns JWT |
-| POST | /api/auth/change-password | JWT | Change password |
-| GET | /api/auth/me | JWT | Get current user profile |
+1. Open the app or website and click **Create One**. (http://akako.net:8082/)
+2. Enter your email, a password, and your name.
+3. You are logged in automatically. Until a Company Admin links you to a company, you will see an empty map.
 
-### 6.2 Device Endpoints
+### 7.2 First-time setup (System Administrator)
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/devices | JWT | List devices (filtered by role) |
-| GET | /api/devices/{id} | JWT | Get device by ID |
-| PATCH | /api/devices/{id} | JWT | Update device display name |
-| DELETE | /api/devices/{id} | JWT | Delete device (cascades telemetry) |
-| GET | /api/devices/{id}/locations | JWT | Get position history (from/to/limit) |
-| GET | /api/devices/{id}/locations/latest | JWT | Get latest position |
-| GET | /api/devices/{id}/trips | JWT | Get trip history from ignition transitions |
-| PATCH | /api/devices/{id}/phone | Staff | Set SIM phone number |
+1. Sign in with the administrator account that is created automatically on first start.
+   (Username: admin@gpstracker.local, Password: P@ssw0rd)
+2. **Create a company** for each customer/organization: `Administration → Companies → Create`.
+3. **Tune company rules** — how many minutes before a vehicle is considered "offline", and how much of a pause splits one trip from the next.
+4. **Assign a Company Admin** to each company (users must register first — see 7.1).
+5. **Assign the Company Admin** next to the company: `Administration → Companies → Users → Add`.
 
-### 6.3 Device Command Endpoints
+### 7.3 Add users and set what they can see
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/devices/connections | SystemAdmin | List connected device IMEIs |
-| POST | /api/devices/{id}/command | Admin | Send Codec 12 command |
-| POST | /api/devices/{id}/digout | Admin | Set digital output |
-| POST | /api/devices/{id}/param | Admin | Set device parameter |
-| POST | /api/devices/{id}/reset | Admin | CPU reset |
-| GET | /api/devices/{id}/events | JWT | Get device events |
-| GET | /api/devices/{id}/power-log | JWT | Get power voltage log |
+1. Company Admin: go to `Admin → Link existing`, enter the person's registration email, and link them.
+2. Choose their **role**:
+   - **Admin** — manages users, vehicles, trackers, and zones for the company;
+   - **User** — can view all company vehicles;
+   - **Driver** — sees only the vehicles assigned to them.
+3. For **Drivers**, tick the vehicles they should see (`Vehicles` checkbox).
 
-### 6.4 Geofence Endpoints
+### 7.4 Put a tracker in a vehicle
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/geofences | Admin | List geofences |
-| POST | /api/geofences | Admin | Create geofence (circle/polygon) |
-| PUT | /api/geofences/{id} | Admin | Update geofence |
-| DELETE | /api/geofences/{id} | Admin | Delete geofence |
-| GET | /api/geofences/events | Admin | Get enter/exit events |
-| GET | /api/geofences/{id}/vehicles | Admin | List assigned vehicles |
-| POST | /api/geofences/{id}/vehicles/{vehicleId} | Admin | Assign vehicle |
-| DELETE | /api/geofences/{id}/vehicles/{vehicleId} | Admin | Remove vehicle |
-| GET | /api/geofences/{id}/violations | Admin | Get violations |
-| GET | /api/vehicles/{vehicleId}/geofence-violations | Admin | Get violations for a vehicle |
+1. **Install** the tracking device in the vehicle and power it on.
+2. The platform **detects it automatically** — you will see *"New device registered: (IMEI)"*.
+3. Give it a friendly name (e.g., "Truck 01"): `Devices → {device} → Rename`.
+4. **Assign it to your company**: device detail → `Companies → Edit`.
+5. Company Admin: create the **vehicle** (`Vehicles → Create vehicle`), then **link the device** to it. One device links to only one vehicle at a time.
 
-### 6.5 Notification Endpoints
+> No manual device registration is required — power on and it appears.
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/notifications | JWT | List notifications |
-| GET | /api/notifications/unread-count | JWT | Unread count |
-| PUT | /api/notifications/{id}/read | JWT | Mark as read |
-| PUT | /api/notifications/read-all | JWT | Mark all as read |
-| DELETE | /api/notifications/{id} | JWT | Dismiss notification |
-| GET | /api/notifications/settings | Staff | Get notification settings |
-| POST | /api/notifications/settings | Staff | Upsert notification setting |
-| POST | /api/notifications/settings/bulk | Staff | Bulk upsert all settings |
+### 7.5 Draw a safe zone (geofence)
 
-### 6.6 Admin Endpoints
+1. Go to `Geofences → Create zone`.
+2. Choose a **circle** (center + radius) or **polygon** (draw the outline).
+3. Give it a name and (optional) a **speed limit** for that area.
+4. **Assign vehicles** to the zone.
+5. You are now notified when an assigned vehicle **enters or exits** the zone, and if it **exceeds the zone's speed limit**.
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/admin/users | Staff | List company users |
-| POST | /api/admin/users | Staff | Create user |
-| POST | /api/admin/users/link | Staff | Link self-registered user |
-| PUT | /api/admin/users/{id}/vehicles | Staff | Assign vehicles to user |
-| GET | /api/admin/users/search | Staff | Search users by email |
-| PUT | /api/admin/users/{id}/role | Staff | Set user role |
-| DELETE | /api/admin/users/{id} | Staff | Unlink user from company |
-| GET | /api/admin/devices | Staff | List company devices |
-| POST | /api/admin/devices | SystemAdmin | Add existing device to company |
-| POST | /api/admin/devices/create | SystemAdmin | Create device + assign to company |
-| PUT | /api/admin/devices/{id}/phone | Staff | Set SIM phone number |
-| PUT | /api/admin/devices/{id}/offline-threshold | Staff | Set device offline threshold |
-| GET | /api/admin/vehicles | Staff | List company vehicles |
-| POST | /api/admin/vehicles | Staff | Create vehicle |
-| POST | /api/admin/vehicles/{id}/device | Staff | Link device to vehicle |
-| DELETE | /api/admin/vehicles/{id} | Staff | Delete vehicle |
-| PUT | /api/admin/settings/offline-threshold | Staff | Set company offline threshold |
-| PUT | /api/admin/settings/trip-gap | Staff | Set company trip gap |
+### 7.6 Watch the fleet (map & dashboard)
 
-### 6.7 Company Endpoints (SystemAdmin only)
+- **Live Map** — see all vehicles, click one for details (speed, engine, power, telemetry such as doors, GSM signal, odometer).
+- **Dashboard** — a summary card: total vehicles, online now, offline count, and the latest zone events.
+- **Device page** — for any vehicle: history replay map, list of trips, power health, events, and zone violations.
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/companies | SystemAdmin | List all companies |
-| POST | /api/companies | SystemAdmin | Create company |
-| PUT | /api/companies/{id} | SystemAdmin | Update company |
-| POST | /api/companies/{id}/admins | SystemAdmin | Create admin for company |
-| DELETE | /api/companies/{id} | SystemAdmin | Delete company (cascades) |
+### 7.7 Read and act on alerts
 
-### 6.8 System Admin Endpoints
+- Alerts appear as **notifications** with a badge count (bell icon).
+- Click to read; mark as **read** or dismiss.
+- Settings (Company Admin) control **which** alerts are on and **the thresholds** (e.g., speed limit, battery voltage, force for braking).
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | /api/admin/system/users | SystemAdmin | List all users across companies |
-| PUT | /api/admin/system/users/{id}/company | SystemAdmin | Set/clear user company |
-| DELETE | /api/admin/system/users/{id} | SystemAdmin | Delete user |
-| PATCH | /api/admin/system/users/{id}/display-name | SystemAdmin | Update display name |
-| GET | /api/admin/system/devices | SystemAdmin | List all devices |
-| PUT | /api/admin/system/devices/{id}/company | SystemAdmin | Add/remove device from company |
-| POST | /api/admin/system/devices | SystemAdmin | Register device by IMEI |
-| GET | /api/admin/system/companies | SystemAdmin | List all companies |
-| PUT | /api/admin/system/companies/{id}/active | SystemAdmin | Activate/deactivate company |
-| GET | /api/admin/system/available-users | SystemAdmin | List unassigned users |
-| POST | /api/admin/system/companies/{id}/admins | SystemAdmin | Assign user as company admin |
-| DELETE | /api/admin/system/companies/{id} | SystemAdmin | Delete company (cascades) |
+### 7.8 Change alert & company settings (Company Admin)
 
-### 6.9 TCP Device Ingestion
-
-| Port | Protocol | Description |
-|------|----------|-------------|
-| 5027 | Teltonika Codec 8 | Primary device ingestion |
-| 5011 | Queclink | Queclink device ingestion |
-| 5023 | GT06 | GT06 device ingestion |
+- `Settings` page: enable/disable each alert type, set values, set the company **offline threshold**, and set the **trip gap**.
 
 ---
 
-## 7. Database Schema
+## 8. Working Together
 
-### 7.1 Core Tables
+A project succeeds when everyone — technical and non-technical — knows their part. Here is a tiypical software team runs.
 
-**devices** - GPS tracking devices
+### 8.1 Who is on the team
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid PK | Auto-generated |
-| imei | varchar(32) UNIQUE | Device IMEI |
-| display_name | varchar(128) | Human-readable name |
-| protocol | varchar(32) DEFAULT 'teltonika' | Device protocol |
-| model | varchar(64) | Device model |
-| codec_version | smallint | Wire codec version |
-| settings | jsonb | Per-device config |
-| phone_number | varchar(32) | SIM card phone |
-| offline_threshold_minutes | integer DEFAULT 10 | Minutes before offline |
-| company_id | uuid FK | Owning company |
-| created_at | timestamptz | Creation time |
+| Role | What they own |
+|------|---------------|
+| **Business Owner / Client** | The goal and budget. Decides what success looks like. |
+| **Product Owner** | Decides **what** gets built and in what order (the priority list). |
+| **Project Manager** | Coordinates people, timing, and communication; keeps everyone informed. |
+| **Developers** | Build and maintain the software. |
+| **QA / Testers** | Check that things work and catch problems before users do. |
+| **UIUX** | Make sure it looks and feels right. |
+| **Clients User** | Use the system daily and report what works — or does not. |
 
-**vehicle_telemetry** - GPS readings with telemetry
+### 8.2 How the team moves together
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | bigserial PK | Auto-increment |
-| device_id | uuid FK | Source device |
-| timestamp | timestamptz | Reading time |
-| location | geography(Point, 4326) | PostGIS point |
-| speed_kph | double precision | Speed |
-| ignition_on | boolean | Ignition state |
-| satellites | integer | Satellite count |
-| angle_degrees | integer | Heading |
-| power_source | varchar(16) | external/battery/off |
-| power_voltage | double precision | External voltage |
-| battery_voltage | double precision | Battery voltage |
-| gsm_signal | integer | GSM strength |
-| digital_input_1-4 | integer | DIN values |
-| digital_output_1-3 | integer | DOUT values |
-| accel_x, accel_y, accel_z | integer | Accelerometer |
-| abs_acceleration | integer | Total acceleration |
-| total_odometer | bigint | Odometer (meters) |
-| trip_odometer | bigint | Trip odometer |
-| sleep_mode | integer | Sleep state |
-| movement | integer | Movement detection |
-| gnss_status | integer | GNSS status |
-| raw_payload | bytea | Original frame |
+- **Plan together first.** Work is picked in small, reviewable batches from the priority list — not all at once.
+- **Short cycles.** The team works in short sprints (1–2 weeks), then shows results. Nothing big is delivered in one giant, unannounced release.
+- **Show and tell.** At each review, the Product Owner and stakeholders see what was built. Feedback is captured and goes back into the priority list.
+- **Small, reviewable changes.** The team prefers many small updates over a few large surprises — easier to test, easier to fix, easier to follow.
+- **Decisions and changes are tracked.** Big choices (new features, changes in scope, new costs) are agreed and recorded, so there are no surprises later.
 
-**companies** - Tenant organizations
+### 8.3 An open invitation — participate freely
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid PK | Auto-generated |
-| name | varchar(128) UNIQUE | Company name |
-| is_active | boolean DEFAULT true | Active/inactive toggle |
-| offline_threshold_minutes | integer DEFAULT 10 | Global threshold |
-| trip_ignition_gap_minutes | integer DEFAULT 5 | Trip segmentation gap |
-| created_at | timestamptz | Creation time |
+We would really like everyone to participate — but **only if they are genuinely interested in the idea and willing to contribute**. Not everyone needs to work on the technical side; there are many different areas to help with.
 
-**vehicles** - Fleet vehicles
+- Some people can help by **testing the existing system** and reporting problems or suggesting improvements.
+- Others can look at the system from a **normal user's perspective** and tell us what is confusing or what could be easier.
+- We can also work together on **UI/UX, branding, product ideas, business planning, pricing, marketing, customer requirements, and future features**.
+- If you have experience or interest in **transportation, logistics, fleet management, business, design, sales**, or anything related, your experience can be very useful.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid PK | Auto-generated |
-| company_id | uuid FK | Owning company |
-| name | varchar(128) | Vehicle name |
-| device_id | uuid FK UNIQUE | Assigned device (1:1) |
-| created_at | timestamptz | Creation time |
+> **Please decide freely.** The main goal at this point is to bring together people who are genuinely interested in the project, show what has already been done, get honest feedback, and decide what we should focus on next. I also want everyone to feel free to participate only if they are truly interested in the idea and willing to contribute. There should be no pressure to join because of possible future profit, expectations from others, or simply because friends are involved.I really want to stress this point because we may have some people in our circle who are a bit "officious" and tend to push their opinions or ideas onto others. At the same time, we may also have people who are push-overs who are more likely to simply follow whatever they are told. I don't want either of these situations to influence anyone's decision to participate. Everyone should feel free to make their own decision based on their genuine interest in the project, not because of pressure from others, friendship, or the expectation of future profit..
 
-### 7.2 Junction Tables
+### 8.4 How you can participate (non-technical people)
 
-**company_devices** - Device-company (many-to-many)
+You do not need to read code to make a real difference:
 
-| Column | Type | Description |
-|--------|------|-------------|
-| company_id | uuid FK | Company |
-| device_id | uuid FK | Device |
+- **Test and report.** Use the live map, zones, and alerts. When something looks wrong, tell the team exactly what you did and what you saw (screenshots help a lot).
+- **Give real-world feedback.** Tell the Product Owner what feels natural and what feels awkward. You are the expert on your fleet.
+- **Define rules and thresholds.** The system only works well with real numbers — your speed limits, your battery expectations, the color and the layout, the flow of a process, your "offline" timeouts. These are business decisions, not technical ones.
+- **Help shape the product and the brand.** UI/UX, branding (name is Navon — logo, colors, and fonts are still open), product ideas, business planning, pricing, marketing, and customer requirements all need real input.
+- **Request improvements.** Every idea goes on the priority list. Not everything is built immediately, but everything is heard and ranked.
+- **Supply what only you can:** the list of vehicles, drivers, zones, the tracking hardware, and the SIM cards/data.
+- **Validate the results.** After a release, confirm that the behavior you asked for actually shows up in practice.
 
-**user_vehicles** - User-vehicle assignment
+### 8.5 Moving forward together
 
-| Column | Type | Description |
-|--------|------|-------------|
-| user_id | uuid | AspNetUsers ID |
-| vehicle_id | uuid FK | Vehicle |
+Going forward, we also want to change how the project is presented. In earlier notes, it was written as "I" because one person described the work they personally did. If we move forward as a group, the project should no longer be presented as something that belongs to or is driven by one person. We should find a suitable way of reporting as **"we"**, and ideally have someone responsible for coordinating and presenting project updates on behalf of the group. This makes the project feel like a shared effort and helps us establish clear roles and responsibilities as we move on.
 
-**vehicle_geofences** - Vehicle-geofence assignment
+### 8.6 Ground rules
 
-| Column | Type | Description |
-|--------|------|-------------|
-| vehicle_id | uuid FK | Vehicle |
-| geofence_id | uuid FK | Geofence |
-
-### 7.3 Geofence Tables
-
-**geofences** - Geofence zones
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid PK | Auto-generated |
-| company_id | uuid FK | Owning company |
-| name | varchar(128) | Zone name |
-| type | integer | 0=Circle, 1=Polygon |
-| center_latitude | double precision | Center lat |
-| center_longitude | double precision | Center lng |
-| radius_meters | double precision | Circle radius |
-| polygon_wkt | text | WKT polygon |
-| speed_limit_kph | double precision | Speed limit |
-| created_at | timestamptz | Creation time |
-
-**geofence_violations** - Active violations
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | bigserial PK | Auto-increment |
-| vehicle_id | uuid FK | Vehicle |
-| geofence_id | uuid FK | Geofence |
-| device_id | uuid FK | Device |
-| entered_at | timestamptz | Violation start |
-| resolved_at | timestamptz | Resolution time |
-| latitude, longitude | double precision | Location |
-
-**geofence_events** - Enter/exit events
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | bigserial PK | Auto-increment |
-| geofence_id | uuid FK | Geofence |
-| device_id | uuid FK | Device |
-| event_type | integer | 0=Enter, 1=Exit |
-| timestamp | timestamptz | Event time |
-
-### 7.4 Notification & Event Tables
-
-**notification_settings** - Alert configuration
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid PK | Auto-generated |
-| company_id | uuid FK | Company |
-| alert_type | varchar(32) | Alert type key |
-| enabled | boolean DEFAULT true | Is enabled |
-| threshold_value | double precision | Threshold |
-
-**notifications** - Generated alerts
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | uuid PK | Auto-generated |
-| company_id | uuid FK | Company |
-| device_id | uuid FK | Device |
-| alert_type | varchar(32) | Alert type |
-| title | varchar(128) | Title |
-| message | text | Message |
-| severity | varchar(16) | info/warning/critical |
-| read | boolean DEFAULT false | Read status |
-| data | jsonb | Metadata |
-| created_at | timestamptz | Alert time |
-
-**device_events** - Eco scoring, idling, etc.
-
-| Column | Type | Description |
-|--------|------|-------------|
-| id | bigserial PK | Auto-increment |
-| device_id | uuid FK | Device |
-| event_type | varchar(32) | Event type |
-| title | varchar(128) | Title |
-| message | text | Message |
-| severity | varchar(16) | Severity |
-| latitude, longitude | double precision | Location |
-| data | jsonb | Metadata |
-| created_at | timestamptz | Event time |
-
-**notifications** (see 7.4 above) stores alert records; **device_events** store driving/eco events.
+- One priority list, maintained by the Product Owner — so effort focuses on what matters most.
+- Nothing is called "done" until a person who will actually use it has confirmed it works.
+- Honest status over perfect news. If something slips, the team says so early and explains the plan.
+- Questions are always welcome — there are no silly questions in this project. If you are unsure, ask.
 
 ---
 
-## 8. Deployment & Infrastructure
+## 9. How Can I Contribute?
 
-### 8.1 VPS Deployment
+This is the most useful place for a new person to start. Whether you bring **time, expertise, funding, contacts, or ideas**, there is a way to help. If you are considering joining, answer these six questions for yourself and bring them to a conversation:
 
-| Property | Value |
-|----------|-------|
-| Host | `<your-domain>` (configured for your hosting) |
-| API | `https://<your-domain>:8081` |
-| Frontend | `https://<your-domain>` (or via nginx reverse proxy) |
-| Seq | `https://<your-domain>:8083` (internal; not exposed publicly in production) |
-| TCP Ingestion | `<your-domain>:5027` (Teltonika), `:5011` (Queclink), `:5023` (GT06) |
 
-### 8.2 Deployment Commands
+What interests you about the project? 
+   e.g. I want to help with the business side. 
+What could you contribute? 
+   e.g Time, expertise, funding, contacts, or ideas. 
+What role would you like to explore? 
+   e.g. Co-founder, advisor, volunteer, partner, or supporter. 
+What would you like to help accomplish? 
+   e.g Organize the team, develop the brand, or find funding. 
+What do you need from the project? 
+   e.g More information, a clear role, or a discussion. 
+What should we do next? 
+   e.g Meet, propose an idea, or take responsibility for a task. 
 
-```bash
-# Pull and restart all services
-docker-compose pull
-docker-compose up -d
+### Ways you can help
 
-# View logs
-docker-compose logs -f api
-docker-compose logs -f web
+- **Time** — organizing, testing, writing, communicating, or managing.
+- **Expertise** — business planning, finance, marketing, design, or technology.
+- **Funding** — one-off support, a monthly contribution, or introducing sponsors.
+- **Contacts** — opening doors to clients, partners, or organizations.
+- **Ideas** — direction on how the product, brand, or team should evolve.
 
-# Rebuild after code changes (on build machine)
-set DOCKER_BUILDKIT=0
-docker-compose build api web
-docker-compose up -d
-```
-
-### 8.3 Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| POSTGRES_PASSWORD | Database password |
-| JWT_KEY | JWT signing key (min 32 chars) |
-| ConnectionStrings__DefaultConnection | PostgreSQL connection string |
-| ASPNETCORE_ENVIRONMENT | Production/Development |
-| SEQ_FIRSTRUN_NOAUTHENTICATION | Seq auth (true for dev) |
-
-### 8.4 Mobile Build
-
-```bash
-# Capacitor sync (after frontend build)
-cd web
-npm run build
-npx cap sync android
-
-# Build APK
-cd android
-./gradlew assembleDebug
-
-# Environment for mobile builds
-$env:VITE_API_BASE_URL = "https://<your-domain>:8081"
-$env:JAVA_HOME = "C:\Program Files\Java\jdk-24"
-```
-
-### 8.5 GPS Simulator Build
-
-```bash
-cd gps-simulator
-./gradlew assembleDebug
-# APK at app/build/outputs/apk/debug/app-debug.apk
-```
+> There is no "right" way to contribute. A useful idea, an honest opinion, or an introduction is just as valuable as money or code.
 
 ---
 
-## 9. Security
+## 10. Questions to Move the Project Forward
 
-### 9.1 Authentication
+The project is beyond the "what is it" stage, but a number of decisions still need to be made together. Use these as a discussion agenda — pick a theme per meeting, or split the questions among the team and compare answers.
 
-- JWT Bearer tokens with configurable signing key
-- Passwords hashed via ASP.NET Core Identity (PBKDF2)
-- Token contains: user ID, email, roles, company ID
-- Tokens validated on every REST and SignalR request
+### 10.1 Brand & identity
 
-### 9.2 Authorization
+- What should the project be called? — **decided: Navon** (note: `navon.com` is unavailable, so the web address is still open)
+- Who is the brand for?
+- What should be the brand color and theme?
+- What should people understand when they first hear about it?
+- What values should the brand represent?
+- What should the visual identity look and feel like?
+- What should make the project recognizable?
+- Who should help decide the name and branding?
+- What should we prepare before presenting the project publicly?
 
-- Role-based access control (RBAC): SystemAdmin, Admin, User, Driver
-- Company-scoped data isolation on all queries
-- Device access layer (DeviceAccess.cs) computes visible devices per role
-- Admin endpoints require [Authorize(Roles = "Admin")] or SystemAdmin
-- Geofence management restricted to Admin role
+### 10.2 Vision, funding & costs
 
-### 9.3 Data Isolation
+- What would success look like in 1 year?
+- What values should guide the project?
+- What will it cost to move the project forward?
+- What costs do we already know about?
+- What costs are we likely to discover later?
+- What can we do with the resources we already have?
+- Who is willing to contribute financially?
+- Should contributions be donations, investments, membership fees, or something else?
+- Are there grants, sponsors, or partnerships we should explore?
+- What would we need funding for?
+- How much funding would allow us to reach the next major milestone?
+- How should financial contributions be recorded and managed?
+- What should happen if the project does not generate revenue?
 
-- All queries filtered by company_id for Admin/User/Driver roles
-- SystemAdmin bypasses company filter (sees all)
-- User/Driver sees only devices linked via user_vehicles table
-- company_devices junction table controls multi-company device visibility
+### 10.3 People, support & advice
 
-### 9.4 Transport Security
+- Who is already interested?
+- Who else should we invite?
+- What skills, experience, or connections are missing?
+- What skills, experience, or connections do we need?
+- What kinds of people would add the most value?
+- What would make someone want to join?
+- What would make someone stay involved?
+- Who could advise us?
+- What expertise do we need from outside the team?
+- Who could introduce us to useful people or organizations?
+- What should we ask experienced people to review?
+- What assumptions should we ask others to challenge?
+- What lessons can we learn from similar initiatives?
+- What partnerships could help us?
+- What kind of feedback would be most valuable right now?
 
-- JWT transmitted via HTTP Authorization header
-- SignalR uses WebSocket with access_token query parameter
-- Production should use HTTPS (TLS termination at reverse proxy)
+### 10.4 Ways to contribute & collaborate
 
-### 9.5 Mobile Security
+- What are the different ways someone can contribute?
+- Can people contribute time, money, expertise, contacts, or ideas?
+- What responsibilities could be shared?
+- How should people propose ideas?
+- How should we decide which ideas to pursue?
+- How should we recognize people's contributions?
+- How can we make collaboration easy for someone joining for the first time?
 
-- Biometric authentication (fingerprint/face) via Capacitor plugin
-- Credentials encrypted in SecureStorage (Android Keystore)
-- Auto-clear credentials on logout
-- Biometric check on app launch
+### 10.5 Team, decisions & organization
+
+- What kind of team do we need at this stage?
+- What roles are necessary?
+- Who is currently responsible for what?
+- Who should coordinate the project?
+- Who should make major decisions?
+- How should responsibilities be divided?
+- How should we handle disagreements?
+- How should we communicate?
+- What should happen if someone becomes unavailable, lazy, untrustworthy, theif? (yeselel?)
+- Does this project need a formal organization now?
+- What would be the benefits of creating a company?
+- What posibilities are there to work without forming any organization, demboch tila sayhonuben?
+- What would each option allow us to do?
+- What responsibilities would come with each option?
+- How should ownership or membership be handled?
+- What should happen if new people join later?
+- What should happen if someone leaves?
+- What agreements should we have before making the project formal?
+
+### 10.6 Next steps
+
+- What is the most important thing we need to accomplish next?
+- What should we discuss at the next meeting?
+- What should we decide before inviting more people?
+- What should we prepare before presenting the project to potential collaborators?
+- Who should take responsibility for the next steps?
+- What can each interested person contribute in the next few weeks?
+- What would make us ready to move from an informal project to a more organized initiative?
+- What should we review after the next milestone?
+
+### What should happen next?
+
+1. **Choose a coordinator** — one person owns the next step so it does not get lost.
+2. **Pick one theme** from this list and make it the agenda of the next meeting.
+3. **Agree on one decision** to make before inviting more people in.
+4. **Ask everyone for one contribution** they can make in the next few weeks.
+5. **Bring potential collaborators in early** — with a short, honest summary of the project, what is done, and what we are deciding.
 
 ---
 
-## 10. Non-Functional Requirements
+## 11. What and Who Has Contributed So Far
 
-### 10.1 Performance
+Notable contributions have already been made — before any formal budget or investment is decided:
 
-| Metric | Target |
-|--------|--------|
-| Telemetry ingestion latency | < 100ms (device to DB) |
-| SignalR push latency | < 200ms (device to client) |
-| API response time | < 500ms (95th percentile) |
-| Concurrent device connections | 100+ simultaneous TCP connections |
-| Database query time | < 50ms for indexed queries |
+- **Wube (business & fleet-management side)** contributes time and practical knowledge: how the different GPS devices work, how they are configured and set up, testing devices in different situations, and providing personal SIM cards as well as additional SIM cards for testing. He has also provided access and credentials for several commercial systems and services (paid and free) used for testing, comparison, and understanding how similar systems work.
+- **Technical side (the developer)** builds the system, puts the parts together, deploys it, tests it, fixes issues, and continues development — supported along the way by various tools and AI systems for development, research, troubleshooting, and speeding up the work.
+- **Other individuals** have helped here and there, but in small amounts, so it is not listed separately. That is not because people did not want to help — at this early stage, not much extra help was needed.
 
-### 10.2 Scalability
-
-- Horizontal: API containers can be load-balanced (stateless JWT)
-- Connection registry is in-memory (single-instance for TCP commands)
-- PostgreSQL handles spatial queries with PostGIS GiST indexes
-- SignalR can use Redis backplane for multi-instance (not yet configured)
-
-### 10.3 Reliability
-
-- Docker health checks on PostgreSQL (pg_isready)
-- Automatic container restart (restart: unless-stopped)
-- TCP reconnection in GPS simulator (3s retry on send error)
-- Device reconnection handling in DeviceTcpListener
-- SignalR auto-reconnect in frontend client
-
-### 10.4 Data Retention
-
-- Telemetry: stored indefinitely (partitioning recommended for production)
-- Notifications: stored indefinitely
-- Device events: stored indefinitely
-- Seq logs: retention configured in Seq UI
-
-### 10.5 Monitoring
-
-- Seq centralized logging (all structured logs)
-- Device online/offline detection (configurable threshold)
-- Notification system for system alerts
-- Power monitoring for device health
+There is no formal financial investment yet. Both main sides have already contributed time, knowledge, resources, devices, SIM cards, services, and technical work to get the project to its current stage.
 
 ---
 
-## 11. Budget & Cost Estimate
+## 12. Cost & Budget
 
-### 11.1 Infrastructure Costs (Monthly)
+> These are initial estimates for the next stage of the project. The actual cost can change depending on the options we choose, the people involved, and whether some work can be done by members of the group.
 
-| Service | Spec | Monthly Cost |
-|---------|------|-------------|
-| VPS | 2 vCPU, 4GB RAM, 80GB SSD | TBD |
-| PostgreSQL | Included (Docker) | TBD |
-| Seq | Included (Docker) | TBD |
-| Docker Hosting | Same VPS | TBD |
-| Domain + DNS | TLD of your choice | TBD |
-| SSL Certificate | Let's Encrypt | TBD |
-| **Total Monthly** | | **TBD** |
+### 12.1 Initial project budget (next stage)
 
-### 11.2 Hardware Costs (Per Device)
+| Area | What is Needed | Estimated Cost |
+|------|----------------|----------------|
+| Dedicated VPS / Hosting | Separate server for the project, database, backups, and production environment | $300–600 / year |
+| Domain & SSL | Domain name and related services | $20–50 / year |
+| UI/UX Design | Improve the web and mobile interface and make the product easier to use | TBD |
+| Branding | Logo, colors, fonts, basic brand identity, and marketing materials | TBD |
+| Android App | Final testing, preparation, Play Store setup and publishing | TBD |
+| iOS App | Initial development and Apple Developer setup | TBD |
+| Testing & Devices | GPS trackers, SIM cards, testing devices, and other hardware for real-world testing | TBD |
+| Software Development | Completing unfinished features, fixing issues, improving existing functionality | TBD |
+| Security & Production Setup | Backups, monitoring, security improvements, domain/email configuration | TBD |
+| Business & Legal | Business registration, agreements, basic legal/accounting requirements | TBD |
+| Marketing & Website | Public website, product presentation, initial marketing materials | TBD |
+| **Estimated initial total** | | **TBD** |
 
-> Hardware and device costs are indicative market figures and are not part of the project budget.
+### 12.2 An important note on the budget
+
+- These are **rough estimates, not a final investment requirement**. The actual amount can be significantly lower if members of the group contribute their own skills — someone handles UI/UX, another works on branding, another helps with business planning, and technical members continue development.
+- **Do not start by spending a large amount of money.** First agree on the direction, test the existing system, and identify what is actually needed — then spend where it provides the most value.
+- **Keep costs separate:** development costs, business expenses, and future operational costs should be tracked separately. This makes it easier to understand what has already been contributed, what still needs to be invested, and how future expenses or income should be handled.
+
+### 12.3 Budget by stages
+
+| Stage | Main Goal | Approx. Budget |
+|-------|-----------|----------------|
+| Stage 1 | Testing, feedback, branding and basic product design | TBD |
+| Stage 2 | Production hosting, domain, security and completing important features | TBD |
+| Stage 3 | Mobile app publishing, real-world device testing and website | TBD |
+| Stage 4 | Business setup, marketing and initial operations | TBD |
+| **Total initial range** | | **TBD** |
+
+### 12.4 Hardware per device (indicative market prices)
 
 | Item | Unit Cost | Quantity | Total |
 |------|-----------|----------|-------|
-| Teltonika FMB120 | $50-80 | 10 | $500-800 |
-| Teltonika FMB920 | $40-60 | 10 | $400-600 |
-| SIM Card (data) | $5-10/month | 20 | $100-200/month |
-| OBDII Cable | $10-20 | 20 | $200-400 |
-| **Total Hardware (20 devices)** | | | **$1,100-1,800 + $100-200/mo SIM** |
+| Teltonika FMB120 tracker | $50–80 | 10 | $500–800 |
+| Teltonika FMB920 tracker | $40–60 | 10 | $400–600 |
+| SIM card (data) | $5–10/month | 20 | $100–200/month |
+| OBD-II cable | $10–20 | 20 | $200–400 |
+| **Total hardware (20 devices)** | | | **$1,100–1,800 + $100–200/mo SIM** |
 
-### 11.3 Total Project Cost Summary
-
-| Category | One-Time | Monthly |
-|----------|----------|---------|
-| Development | TBD | - |
-| Infrastructure | - | TBD |
-| Hardware (20 devices) | $1,100-1,800 | $100-200 (SIM) |
-| **Total Year 1** | **TBD** | **TBD** |
-| **Total Year 2+** | - | **TBD** |
-
-### 11.4 Comparison with Commercial Solutions
+### 12.5 How we compare with commercial platforms
 
 | Solution | Setup | Monthly (50 vehicles) |
 |----------|-------|----------------------|
-| GPSTracker (this) | TBD | TBD |
-| Teltonika Flespi | $0 | $150-300 |
-| GPS-Server.net | $0 | $200-400 |
-| Wialon | $0 | $300-600 |
-| Gurtam | $0 | $400-800 |
+| **Navon (this project)** | TBD | TBD |
+| Teltonika Flespi | $0 | $150–300 |
+| GPS-Server.net | $0 | $200–400 |
+| Wialon | $0 | $300–600 |
+| Gurtam | $0 | $400–800 |
+
+Because we control the platform ourselves, running costs are mainly the server and hosting — there are no per-vehicle licensing fees.
 
 ---
 
-## 12. Implementation Roadmap
+## 13. Where to Go for More
 
-### Phase 1: Core Platform (Completed)
+- **[Technical Documentation](TECHNICAL.md)** — architecture, APIs, database, and deployment, for the technical team.
+- **[Web Dashboard README](web/README.md)** — notes for the frontend developers.
 
-- [x] Backend API with CQRS (MediatR + Dapper)
-- [x] PostgreSQL + PostGIS spatial database
-- [x] JWT authentication with role system
-- [x] Multi-tenant company structure
-- [x] Device auto-registration via TCP
-- [x] Teltonika Codec 8/12 protocol support
-- [x] Live map with SignalR real-time updates
-- [x] Web dashboard (React + TypeScript + TailwindCSS)
-
-### Phase 2: Fleet Management (Completed)
-
-- [x] Vehicle management (CRUD)
-- [x] Device-vehicle assignment
-- [x] User-vehicle assignment (for User/Driver roles)
-- [x] Multi-company device assignment (company_devices)
-- [x] Geofencing (circle + polygon)
-- [x] Geofence enter/exit detection
-- [x] Violation of geofencing tracking
-
-### Phase 3: Intelligence (Partial-completed)
-
-- [x] Notification engine with configurable thresholds
-- [~] Speeding, hard brake, hard curve, low battery alerts
-- [x] Per-geofence speed limit enforcement
-- [ ] Eco scoring (harsh acceleration detection)
-- [x] Idling detection (5+ minutes)
-- [x] Jamming detection (GNSS status = 0) — as per FMB120 device
-- [x] Power monitoring and voltage history
-- [x] Digital I/O monitoring (DIN 1-4, DOUT 1-3)
-
-### Phase 4: Remote Control (Completed)
-
-- [x] Codec 12 command builder
-- [x] Device connection registry
-- [~] Remote command execution (arbitrary) — completed, test failed
-- [~] CPU reset (with confirmation) — test failed
-- [~] Quick command buttons — test failed
-- [~] setparam APN configuration — test failed
-
-### Phase 5: Mobile & Integration (Completed)
-
-- [x] Capacitor Android hybrid app
-- [x] Biometric authentication (fingerprint)
-- [x] Secure credential storage
-- [x] GPS simulator app (standalone Android)
-- [x] Seq/Serilog centralized logging
-
-### Phase 6: Future Enhancements (Planned)
-
-- [ ] Fuel consumption estimation
-- [ ] Driver behavior scoring/ranking — AI/ML integration
-- [ ] Route optimization
-- [ ] Scheduled maintenance alerts
-- [ ] Multi-language support (i18n)
-- [ ] iOS mobile app
-- [ ] Push notifications (FCM/APNs)
-- [ ] Data export (CSV/Excel/PDF)
-- [ ] REST API rate limiting
-- [ ] Two-factor authentication (TOTP)
-- [ ] Audit logging
-- [ ] Dashboard analytics charts
-- [ ] Geofence heatmaps
-- [ ] Satellite constellation display
-- [ ] OBDII parameter extensions
-- [ ] Email/SMS notifications
-- [ ] Internal client management system (CRM)
-
----
-
-## 13. Operational Workflow
-
-Onboarding, role setup, and day-to-day operational workflows are maintained in the separate **[Workflow Guide](workflow.md)**.
-
+*Questions about the project? Ask the Product Owner or Project Manager — they will point you to the right place.*

@@ -42,16 +42,3 @@ site:
           default: true
           content:
             directory: ./non-technical
-
-    - type: section
-      key: section-how-tos
-      title: "How-Tos"
-      path: how-tos
-      children:
-        - type: space
-          key: space-how-tos
-          title: "How-Tos"
-          path: how-tos
-          default: true
-          content:
-            directory: ./how-tos
