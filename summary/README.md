@@ -4,15 +4,14 @@
 
 An overview of what Navon does, key concepts, and terminology — for stakeholders, product owners, and anyone who wants the big picture without the implementation detail.
 
-
+→ [Go to Technical docs](./technical/README.md)
 
 
 ## Technical
 
 Architecture, system design, and implementation details — for developers and engineers working on or integrating with the system.
 
-
-
+→ [Go to Technical docs](./technical/README.md)
 
 
 ---
