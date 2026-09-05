@@ -39,18 +39,4 @@ site:
           default: true
           content:
             directory: ./non-technical
-<<<<<<< HEAD
-=======
-    - type: section
-      key: section-how-tos
-      title: How-Tos
-      path: how-tos
-      children:
-        - type: space
-          key: space-how-tos
-          title: How-Tos
-          path: how-tos
-          default: true
-          content:
-            directory: ./how-tos
->>>>>>> a789475b2715d183d7a74a3b990c1d3dd4d09eb5
+ 
