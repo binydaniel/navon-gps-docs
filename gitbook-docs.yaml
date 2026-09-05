@@ -14,7 +14,6 @@ site:
           default: true
           content:
             directory: ./non-technical
-
     - type: section
       key: section-summary
       title: Summary
@@ -40,4 +39,3 @@ site:
           default: true
           content:
             directory: ./technical
-
