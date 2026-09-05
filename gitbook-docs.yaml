@@ -14,7 +14,7 @@ site:
           path: summary
           default: true
           content:
-            directory: ./summary
+            directory: null
     - type: section
       key: section-technical
       title: Technical
