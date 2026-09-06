@@ -5,7 +5,7 @@ site:
     - type: space
       key: space-main
       title: Navon - Fleet Management Early Documentation
-      path: /
+      path: undefined
       default: true
       content:
-        directory: ./
+        directory: ./undefined
