@@ -1,5 +1,9 @@
-# Table of contents
+# README
 
-* [README](README.md)
-* [Navon — Project Guide](non-technical.md)
-* [Design and Architecture](technical.md)
+\*\*# Table of contents
+
+* [Summary](./)
+* [Project Guide](project-guide.md)
+* [Software Design](software-design.md)
+
+## Summary\*\*
