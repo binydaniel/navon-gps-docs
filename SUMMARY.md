@@ -2,4 +2,4 @@
 
 * [Summary](README.md)
 * [Project Guide](non-technical.md)
-* [Technical design and .](technical.md)
+* [Software Design](technical.md)
