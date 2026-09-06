@@ -1,16 +1,8 @@
-# GPS Tracker
+# Design and Architecture
 
 A self-hosted fleet management & telemetry platform. It ingests GPS data from physical tracking devices (Teltonika FMB series, Queclink, GT06), processes telemetry in real-time, and presents fleet intelligence through a web dashboard, an Android mobile app, and a standalone GPS simulator for testing.
 
-## Table of Contents
 
-- [Documentation](#documentation)
-- [Architecture](#architecture)
-- [Quick Start](#quick-start)
-- [Projects](#projects)
-- [Features](#features)
-- [Deployment](#deployment)
-- [Related Documents](#related-documents)
 
 ---
 
@@ -220,8 +212,3 @@ See [SRS §8 Deployment & Infrastructure](SRS.md#8-deployment--infrastructure).
 
 ---
 
-## Related Documents
-
-- [Software Requirements Specification (SRS)](SRS.md)
-- [Operational Workflow Guide](workflow.md)
-- [Web frontend README](web/README.md)
