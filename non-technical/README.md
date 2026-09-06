@@ -196,7 +196,7 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 
 ## 8. Working Together
 
-A project succeeds when everyone — technical and non-technical — knows their part. Here is a tiypical software team runs.
+A project succeeds when everyone — technical and non-technical — knows their part. Here is how a typical software team runs.
 
 ### 8.1 Who is on the team
 
