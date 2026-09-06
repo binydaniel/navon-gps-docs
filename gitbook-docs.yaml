@@ -1,6 +1,6 @@
 $schema: https://api.gitbook.com/gitbook-docs.yaml
 site:
-  title: Navon - Fleet Management Early Documentation
+  title: Navon - Fleet Management (Early) Documentation
   structure:
     - type: space
       key: space-main
