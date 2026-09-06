@@ -6,11 +6,11 @@ A self-hosted fleet management & telemetry platform. It ingests GPS data from ph
 
 ## Documentation
 
-| Document                             | Description                                                       |
-| ------------------------------------ | ----------------------------------------------------------------- |
-| [README](technical.md)               | Getting started, architecture, and quick references               |
-| [SRS](../technical/SRS.md)           | Full software requirements specification (features, APIs, schema) |
-| [WORKFLOW](../technical/workflow.md) | Onboarding and operational workflow for all roles                 |
+| Document                          | Description                                                       |
+| --------------------------------- | ----------------------------------------------------------------- |
+| [README](technical.md)            | Getting started, architecture, and quick references               |
+| [SRS](technical/SRS.md)           | Full software requirements specification (features, APIs, schema) |
+| [WORKFLOW](technical/workflow.md) | Onboarding and operational workflow for all roles                 |
 
 ***
 
@@ -92,13 +92,13 @@ dotnet run
 
 ## Projects
 
-| Path                                                        | Description                                                            |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------- |
-| [`api/MyGpsTracker.Api`](../technical/api/MyGpsTracker.Api) | ASP.NET Core 9 backend — CQRS/MediatR + Dapper, TCP ingestion, SignalR |
-| [`db`](../technical/db/)                                    | PostGIS schema (Docker init)                                           |
-| [`web`](../technical/web/)                                  | React 18 + TypeScript + Vite + Tailwind dashboard (maps via Leaflet)   |
-| [`web/android`](../technical/web/android/)                  | Capacitor hybrid Android app (biometric auth, secure storage)          |
-| [`gps-simulator`](../technical/gps-simulator/)              | Standalone Android fleet simulator (Teltonika Codec 8 over TCP)        |
+| Path                                                     | Description                                                            |
+| -------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`api/MyGpsTracker.Api`](technical/api/MyGpsTracker.Api) | ASP.NET Core 9 backend — CQRS/MediatR + Dapper, TCP ingestion, SignalR |
+| [`db`](technical/db/)                                    | PostGIS schema (Docker init)                                           |
+| [`web`](technical/web/)                                  | React 18 + TypeScript + Vite + Tailwind dashboard (maps via Leaflet)   |
+| [`web/android`](technical/web/android/)                  | Capacitor hybrid Android app (biometric auth, secure storage)          |
+| [`gps-simulator`](technical/gps-simulator/)              | Standalone Android fleet simulator (Teltonika Codec 8 over TCP)        |
 
 ### Key Backend Features
 
@@ -206,6 +206,6 @@ Standalone Android app (`gps-simulator/`) that simulates one or many Teltonika d
 
 ## Deployment
 
-See [SRS §8 Deployment & Infrastructure](../technical/SRS.md#8-deployment--infrastructure).
+See [SRS §8 Deployment & Infrastructure](technical/SRS.md#8-deployment--infrastructure).
 
 ***

@@ -1,7 +1,7 @@
 # Project Guide
 
 > **Audience:** clients, managers, operators, drivers, and everyone who is not writing code.\
-> This guide explains what the project is, where it stands today, and how we all work together. Technical readers should see the [Technical Documentation](../non-technical/TECHNICAL.md).
+> This guide explains what the project is, where it stands today, and how we all work together. Technical readers should see the [Technical Documentation](non-technical/TECHNICAL.md).
 
 ***
 
@@ -450,7 +450,7 @@ Because we control the platform ourselves, running costs are mainly the server a
 
 ## 13. Where to Go for More
 
-* [**Technical Documentation**](../non-technical/TECHNICAL.md) — architecture, APIs, database, and deployment, for the technical team.
-* [**Web Dashboard README**](../non-technical/web/) — notes for the frontend developers.
+* [**Technical Documentation**](non-technical/TECHNICAL.md) — architecture, APIs, database, and deployment, for the technical team.
+* [**Web Dashboard README**](non-technical/web/) — notes for the frontend developers.
 
 _Questions about the project? Ask the Product Owner or Project Manager — they will point you to the right place._
