@@ -2,12 +2,12 @@
 
 ## Summary
 
-* [Summary](summary/README.md)
+* [Summary](README.md)
 
 ## Project Overview
 
-* [Project Guide](non-technical/README.md)
+* [Project Guide](project-overview/non-technical.md)
 
 ## Technical
 
-* [GPS Tracker](technical/README.md)
+* [GPS Tracker](technical/technical.md)
