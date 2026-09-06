@@ -1,5 +1,5 @@
 # Table of contents
 
-* [Summary](README.md)
-* [Project Guide](non-technical.md)
-* [GPS Tracker](technical.md)
+* [Summary](summary/README.md)
+* [Project Guide](non-technical/README.md)
+* [GPS Tracker](technical/README.md)
