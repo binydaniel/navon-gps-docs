@@ -2,4 +2,4 @@
 
 * [Summary](summary/README.md)
 * [Project Guide](non-technical/README.md)
-* [GPS Tracker](technical/README.md)
+* [Software Architecture & Design](technical/README.md)

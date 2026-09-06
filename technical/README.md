@@ -204,11 +204,6 @@ Standalone Android app (`gps-simulator/`) that simulates one or many Teltonika d
 - Personalized dashboard with device stats and recent geofence events
 - Settings: alert thresholds, notification preferences, company offline threshold, trip ignition gap
 
----
-
-## Deployment
-
-See [SRS §8 Deployment & Infrastructure](SRS.md#8-deployment--infrastructure).
 
 ---
 
