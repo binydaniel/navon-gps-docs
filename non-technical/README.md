@@ -227,7 +227,6 @@ We would really like everyone to participate — but **only if they are genuinel
 - We can also work together on **UI/UX, branding, product ideas, business planning, pricing, marketing, customer requirements, and future features**.
 - If you have experience or interest in **transportation, logistics, fleet management, business, design, sales**, or anything related, your experience can be very useful.
 
-> **Please decide freely, Personal opinion.** The main goal at this point is to bring together people who are genuinely interested in the project, show what has already been done, get honest feedback, and decide what we should focus on next. I also want everyone to feel free to participate only if they are truly interested in the idea and willing to contribute. There should be no pressure to join because of possible future profit, expectations from others, or simply because friends are involved.I really want to stress this point because we may have some people in our circle who are a bit "officious" and tend to push their opinions or ideas onto others. At the same time, we may also have people who are push-overs who are more likely to simply follow whatever they are told. I don't want either of these situations to influence anyone's decision to participate. Everyone should feel free to make their own decision based on their genuine interest in the project, not because of pressure from others, friendship, or the expectation of future profit..
 
 ### 8.4 How you can participate (non-technical people)
 
@@ -252,6 +251,10 @@ Going forward, we also want to change how the project is presented. In earlier n
 - Honest status over perfect news. If something slips, the team says so early and explains the plan.
 - Questions are always welcome — there are no silly questions in this project. If you are unsure, ask.
 
+### 8.7 Personal opinion
+The main goal at this point is to bring together people who are genuinely interested in the project, show what has already been done, get honest feedback, and decide what we should focus on next. I also want everyone to feel free to participate only if they are truly interested in the idea and willing to contribute. There should be no pressure to join because of possible future profit, expectations from others, or simply because friends are involved.I really want to stress this point because we may have some people in our circle who are a bit "officious" and tend to push their opinions or ideas onto others. At the same time, we may also have people who are push-overs who are more likely to simply follow whatever they are told. I don't want either of these situations to influence anyone's decision to participate. Everyone should feel free to make their own decision based on their genuine interest in the project, not because of pressure from others, friendship, or the expectation of future profit...
+
+
 ---
 
 ## 9. How Can I Contribute?
@@ -266,11 +269,11 @@ What could you contribute?
 What role would you like to explore? 
    e.g. Co-founder, advisor, volunteer, partner, or supporter. 
 What would you like to help accomplish? 
-   e.g Organize the team, develop the brand, or find funding. 
+   e.g. Organize the team, develop the brand, or find funding. 
 What do you need from the project? 
-   e.g More information, a clear role, or a discussion. 
+   e.g. More information, a clear role, or a discussion. 
 What should we do next? 
-   e.g Meet, propose an idea, or take responsibility for a task. 
+   e.g. Meet, propose an idea, or take responsibility for a task. 
 
 ### Ways you can help
 
