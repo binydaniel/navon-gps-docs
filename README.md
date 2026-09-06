@@ -1,5 +1,5 @@
 # Table of contents
 
-* [README](README.md)
+* [Index](README.md)
 * [Navon — Project Guide](non-technical.md)
 * [Design and Architecture](technical.md)
