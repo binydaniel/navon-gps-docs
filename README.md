@@ -1,5 +1,3 @@
-# Table of contents
-
 # Navon- Fleet Tracking (Early) Documentation
 
 

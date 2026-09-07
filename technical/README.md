@@ -3,17 +3,6 @@
 A self-hosted fleet management & telemetry platform. It ingests GPS data from physical tracking devices (Teltonika FMB series, Queclink, GT06), processes telemetry in real-time, and presents fleet intelligence through a web dashboard, an Android mobile app, and a standalone GPS simulator for testing.
 
 
-
----
-
-## Documentation
-
-| Document | Description |
-|----------|-------------|
-| [README](README.md) | Getting started, architecture, and quick references |
-| [SRS](SRS.md) | Full software requirements specification (features, APIs, schema) |
-| [WORKFLOW](workflow.md) | Onboarding and operational workflow for all roles |
-
 ---
 
 ## Architecture
