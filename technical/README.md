@@ -1,4 +1,4 @@
-# Design and Architecture
+# Software Design and Architecture: Technical 
 
 A self-hosted fleet management & telemetry platform. It ingests GPS data from physical tracking devices (Teltonika FMB series, Queclink, GT06), processes telemetry in real-time, and presents fleet intelligence through a web dashboard, an Android mobile app, and a standalone GPS simulator for testing.
 

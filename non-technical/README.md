@@ -1,4 +1,4 @@
-# Navon — Project Guide
+# Project Guide: Non - Technical
 
 > **Audience:** clients, managers, operators, drivers, and everyone who is not writing code.  
 > This guide explains what the project is, where it stands today, and how we all work together. Technical readers should see the [Technical Documentation](TECHNICAL.md).
