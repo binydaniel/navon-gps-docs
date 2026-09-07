@@ -11,7 +11,7 @@ This is a work in progress (including these documents) and will evolve as we lea
 
 ---
 
-* NOTE: Please read the Non-technical and How-tos documents entirely before asking any questions. I (and Claude.ai) made a lot of effort and time preparing this documents !!!!
+* NOTE: Please read the Non-technical documents entirely before asking any questions. I (and Claude.ai :-) ) made a lot of effort and time preparing this documents. Your reading it would mean you appreciated my effort.  
 
 * This documentation is a work in progress and will be updated as the project evolves.*
 
