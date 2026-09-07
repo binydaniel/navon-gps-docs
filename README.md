@@ -1,10 +1,17 @@
 # Table of contents
 
-# NavonGPS - Fleet Tracking Early Documentation
+# Navon- Fleet Tracking (Early) Documentation
+
 
 ## Project Overview
 
-An overview of what Navon does, key concepts, and terminology — for stakeholders, product owners, and anyone who wants the big picture without the implementation detail.
+Navon - is a fleet-tracking initiative documented for stakeholders, product owners, and anyone interested in understanding the project without technical implementation details. This document outlines what has been completed, what remains to be done, and the opportunities for collaboration. We welcome ideas, advice, business expertise, partnerships, funding, and other contributions as we explore team formation, branding, organization, and the future direction of the project. **This is a work in progress and will evolve as we learn and collaborate.**
+
+---
+* NOTE: Please read the Non-technical and How-tos documents entirely before asking any questions. I (and Claude.ai) made a lot of effort and time preparing this documents !!!!
+
+* This documentation is a work in progress and will be updated as the project evolves.*
+
 
 → [Go to Project Overview](../non-technical/README.md)
 
@@ -17,7 +24,5 @@ Architecture, system design, and implementation details — for developers and e
 
 ---
 
-* NOTE: Please read the Non-technical and How-tos documents entirely before asking any questions. I (and Claude.ai) made a lot of effort and time preparing this documents !!!!
 
-* This documentation is a work in progress and will be updated as the project evolves.*
 
