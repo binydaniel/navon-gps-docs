@@ -465,6 +465,5 @@ Because we control the platform ourselves, running costs are mainly the server a
 ## 13. Where to Go for More
 
 - **[Technical Documentation](TECHNICAL.md)** — architecture, APIs, database, and deployment, for the technical team.
-- **[Web Dashboard README](web/README.md)** — notes for the frontend developers.
+  
 
-*Questions about the project? Ask the Product Owner or Project Manager — they will point you to the right place.*
