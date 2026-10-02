@@ -290,7 +290,7 @@ What should we do next?
 
 ## 10. Questions to Move the Project Forward
 
-The project is beyond the "what is it" stage, but a number of decisions still need to be made together. Here is chatgpt's pick important question needs to be answered indevidually/group. We can use these as a discussion agenda.
+The project is beyond the "what is it" stage, but a number of decisions still need to be made together. Here is chatgpt's pick of important question needs to be answered individually/group. We can use these as a discussion agenda.
 
 ### 10.1 Brand & identity
 
@@ -387,15 +387,17 @@ The project is beyond the "what is it" stage, but a number of decisions still ne
 4. **Ask everyone for one contribution** they can make in the next few weeks.
 5. **Bring potential collaborators in early** — with a short, honest summary of the project, what is done, and what we are deciding.
 
+** It would be nice if someone steps up and summarize this to important checklist so that everyone can have a say on this** 
 ---
 
 ## 11. What and Who Has Contributed So Far
 
 Notable contributions have already been made — before any formal budget or investment is decided:
 
-- **Wube (business & fleet-management side)** contributes time and practical knowledge: how the different GPS devices work, how they are configured and set up, testing devices in different situations, and providing personal SIM cards as well as additional SIM cards for testing. He has also provided access and credentials for several commercial systems and services (paid and free) used for testing, comparison, and understanding how similar systems work.
+- **Wube (business & fleet-management side)** contributes time and practical knowledge: how the different GPS devices work, how they are configured and set up, testing devices in different situations, and providing personal SIM cards as well as additional SIM cards for testing. He has also provided access and credentials for several commercial systems and services (paid and free) used for testing, comparison, and understanding how similar systems work. If it wasn't without him, this probably would not have started in the first place, so thanks!
+  
 - **Technical side (the developer)** builds the system, puts the parts together, deploys it, tests it, fixes issues, and continues development — supported along the way by various tools and AI systems for development, research, troubleshooting, and speeding up the work.
-- **Other individuals** have helped here and there, but in small amounts, so it is not listed separately. That is not because people did not want to help — at this early stage, not much extra help was needed.
+- **Other individuals** have helped here and there, but in small amounts, so it is not listed separately. That is not because people did not want to help — at this early stage, not much extra help was needed. Now we are in a different stages of the project which we need to identify interested people. 
 
 There is no formal financial investment yet. Both main sides have already contributed time, knowledge, resources, devices, SIM cards, services, and technical work to get the project to its current stage.
 
