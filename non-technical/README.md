@@ -1,7 +1,7 @@
 # Project Guide: Non - Technical
 
 > **Audience:** clients, managers, operators, drivers, and everyone who is not writing code.  
-> This guide explains what the project is, where it stands today, and how we all work together. Technical readers should see the [Technical Documentation](TECHNICAL.md).
+> This guide explains what the project is, where it stands today, and how we all work together. Technical readers should also see the [Technical Documentation](TECHNICAL.md).
 
 ---
 
@@ -9,11 +9,11 @@
 
 This booklet is your non-technical companion to the Navon project — a vehicle tracking system. You do not need to understand programming, databases, or networking to follow it. It tells you:
 
-- **What we are building** and why it matters,
-- **Where the project stands today** (what is real, what is still open),
-- **What has been done** so far,
+- **What we are building**,
+- **Where the project stands today**, 
+- **What has been done so far**,
 - **What is still to be done**,
-- **How to use the system day-to-day** (step-by-step guides),
+- **How to use the system day-to-day** 
 - **How to get involved** and how the team works together — including a short *"How can I contribute?"* questionnaire and the questions we still need to answer together to move the project forward.
 
 ---
@@ -22,17 +22,17 @@ This booklet is your non-technical companion to the Navon project — a vehicle 
 
 **The project is now called Navon.** (The name is a first decision. The domain `navon.com` is not available, so the web address is still open — and the brand — logo, colors, fonts — is wide open too; that is something we decide together.)
 
-Navon is a **fleet management and vehicle-tracking platform**. It helps organizations know **where their vehicles are, right now**, and what those vehicles are doing.
+Navon is a **fleet management and vehicle-tracking platform**. It helps organizations know **where their vehicles are, right now**.
 
 Imagine you manage a fleet of delivery vans, service cars, or construction trucks. With Navon you can:
 
-- See **every vehicle on a live map** — where it is, how fast it is going, and whether the engine is on.
+- See **every vehicle on a live map** — where it is, how fast it is going, and whether the engine is on/off.
 - **Draw safe zones** around places like your yard or a client site, and be **alerted when a vehicle enters or leaves** a zone.
 - Get **warnings** for unsafe or unusual behavior — speeding, harsh braking, harsh cornering, a weak battery, or a vehicle going offline.
 - Look back at **where a vehicle has been** (history), what **trips** it made, and its **fuel/battery and power health** over time.
 - Manage everything from a **web dashboard**, an **Android mobile app** (with fingerprint login), and — for testing — a **GPS simulator** that acts like a real tracker.
 
-The system is designed from the ground up for **multiple companies (tenants)**. Each customer or organization has its own private area — its own vehicles, drivers, settings, and alerts — while a system administrator can see and manage everyone.
+The system is designed from the ground up for **multiple companies (tenants)**. Each customer or organization has its own private area, its own vehicles, drivers, settings, and alerts — while a system administrators can manage companies and devices registry.
 
 ### Why it matters
 
@@ -49,14 +49,14 @@ The system is designed from the ground up for **multiple companies (tenants)**. 
 The system works — this is a **working foundation, not yet a finished product or a finished business**.
 
 - **The software is built and running.** A good amount of time has been spent building the actual working system. The goal at this stage was not to make it look like a finished commercial product, but to prove that the idea works and to build the important features behind it. See [What Has Been Done](#5-what-has-been-done) and [What Still Needs to Be Done](#6-what-still-needs-to-be-done).
-- **Hosting is temporary.** The system is currently hosted on a server at **akako.net:8082**. This is a development and testing setup (the server also runs other projects its owner is involved in), so it should not be considered the final hosting. There is no dedicated domain yet.
+- **Hosting is temporary.** The system is not hosted right now.
 - **The Android app works but is not published.** It is mainly used for testing and development. Final app configuration, testing, publishing, and the other Play Store requirements still need to be done.
-- **UI/UX and product design are still to come.** The current interface was made to be usable and to test functionality. It is not the final design. We still need to improve the look and feel, make the system easier to use, settle the overall design style, and make the web and mobile applications feel like one complete product.
-- **Branding is not finalized.** We need to decide the logo, colors, fonts, and general identity of the platform — the name is now **Navon**. This is something we can all work on together, because the product should have its own identity before we present it publicly.
+- **UI/UX and product design are still to come.** The current interface was made to be usable and to test functionality. It is not the final design. We still need to improve the look and feel, make the system easier to use, settle the overall design style, and make the web and mobile applications feel like a complete product.
+- **Branding is not finalized.** We need to decide the logo, colors, fonts, and general identity of the platform. This is something we can all work on together, because the product should have its own identity before we present it publicly.
 - **The business side is open.** There is no finalized business plan, pricing model, target-customer definition, sales strategy, or clear decision on how the service will be offered. The technology is one part of the project; turning it into a real business requires working on these areas too.
 - **More features are planned and some need refinement.** Fuel estimation, driver performance scoring, route optimization, maintenance reminders, better notifications, analytics, data export, and other improvements. Some existing features also need more real-world testing.
 
-**Why we are sharing this now:** not to say everything is ready, but so everyone can see what has already been done and we can discuss what to build from here.
+**Why we are sharing this now:** not to say **everything is ready**, but so everyone can see what has already been done and we can discuss what to build from here.
 
 ---
 
@@ -64,7 +64,7 @@ The system works — this is a **working foundation, not yet a finished product 
 
 | Who | What they do |
 |-----|--------------|
-| **System Administrator** | Owns the whole platform. Creates companies, assigns their admins, watches all devices, and can send commands to trackers. |
+| **System Administrator** | Owns the whole platform. Creates companies, assigns their admins, watches all devices. |
 | **Company Admin** | Runs one company's fleet day-to-day. Adds users and vehicles, links trackers, draws safe zones, and tunes settings. |
 | **Company User** | Views the company's vehicles on the map and dashboard (read-only). |
 | **Driver** | Sees only their own assigned vehicle(s) (read-only). |
@@ -81,16 +81,16 @@ The core platform is built and working. Here is the plain-language scoreboard.
 - ✅ **Accounts & login** — people register with email/password; the mobile app can use fingerprint unlock.
 - ✅ **Multi-company structure** — each organization gets its own isolated fleet and settings.
 - ✅ **Live map** — vehicles appear in real time with speed, engine state, and power status (green = external power, yellow = battery, gray = offline).
-- ✅ **Trackers connect automatically** — a new device only needs to be powered on and set server address; it registers itself. No technical setup required.
+- ✅ **Device connect automatically** — a new device only needs to be powered on and set server address; it registers itself. 
 - ✅ **Vehicles & drivers** — link a tracker to a vehicle and assign vehicles to drivers. One device, one vehicle.
 - ✅ **Safe zones (geofences)** — draw a circle or a polygon on the map, set a speed limit for the zone, and get alerts for enter/exit and speeding.
 - ✅ **Alerts & notifications** — warnings for speeding, hard braking, hard cornering, low battery, going offline, and geofence speeding, with a small delay guard so you are not flooded.
-- ✅ **Driving behavior events** — the system logs harsh acceleration, hard braking, cornering, idling, driving with the engine off, and signal jamming.
+- ✅ **Driving behavior events** — the system logs harsh acceleration, hard braking, cornering, idling, driving with the engine off.
 - ✅ **Power monitoring** — track external/battery voltage and know which vehicles are running on backup power.
 - ✅ **History & trips** — replay where a vehicle went and see its trips (engine-on segments).
 - ✅ **Remote control of devices** — send commands to a tracker (e.g., reset or config) from the dashboard.
 - ✅ **Android mobile app** — the dashboard in your pocket, secured with biometrics.
-- ✅ **GPS simulator** — a training/testing tool that mimics one or many trackers driving smooth, realistic routes — ideal for demos, training, and testing without hardware.
+- ✅ **GPS simulator** — a testing tool that mimics one or many trackers driving smooth, realistic routes — ideal for demos, training, and testing without hardware.
 - ✅ **Central logging** — all system activity is logged in one place (Seq) so problems are easier to find and fix, and it works for development too.
 
 > Not everything is 100% verified: remote commands to physical devices, harsh-acceleration detection,warning for speeding notification have been implemented but not fully validated with real hardware on the road. That is part of the **to-do** below.
@@ -101,14 +101,11 @@ The core platform is built and working. Here is the plain-language scoreboard.
 
 These will be the upcoming agreed-upon next steps. They help the team know what to work on and what to expect.
 
-### Finish and validate (short term)
 
-- ⏳ **Validate remote commands** (CPU reset, settings via the mobile/data connection) with real trackers on the road.
-- ⏳ **Fine-tune driving alerts** (hard acceleration/braking/curve) using real driving data.
-- ⏳ **Round out reports and exports** so management can pull data easily.
-
-### Planned improvements (medium term)
-
+### Planned improvements (short to medium term)
+- Validate remote commands (CPU reset, settings via the mobile/data connection) with real trackers on the road.
+- Fine-tune driving alerts (hard acceleration/braking/curve) using real driving data.
+- Round out reports and exports** so management can pull data easily.
 - Fuel-consumption estimation
 - Driver behavior scoring and ranking (using smart analysis)
 - Route optimization
