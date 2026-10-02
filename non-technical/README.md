@@ -146,6 +146,8 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 
 ## 7. How-To Guides (Day-to-Day)
 
+## Web Portal Walkthrough 
+
 ### 7.1 Get an account
 
 ## Note: This was deployed in a VPS server but its taken down now until we get our own (after lak lak and domain name is selected)
@@ -207,6 +209,13 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 ### 7.8 Change alert & company settings (Company Admin)
 
 - `Settings` page: enable/disable each alert type, set values, set the company **offline threshold**, and set the **trip gap**.
+
+## Mobile App Walkthrough (Android mobile) 
+   *Coming up*
+   
+## GPS Device Simulator (Android mobile) 
+*Tester app without the actual GPS device* 
+   *Coming up*
 
 ---
 
