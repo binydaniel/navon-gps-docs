@@ -1,7 +1,8 @@
 # Navon- Fleet Tracking (Early) Documentation
 **Note:**
-*- The name Navon is about to change (possibly to duka)*
-*- Content is written on  Sept 7, 2026, Update is coming up!*
+* - The name Navon is about to change (possibly to duka) *
+* *
+* - Content is written on  Sept 7, 2026, Update is coming up!*
 
 ## Project Overview
 
