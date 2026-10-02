@@ -226,14 +226,15 @@ We would really like everyone to participate — but **only if they are genuinel
 - Others can look at the system from a **normal user's perspective** and tell us what is confusing or what could be easier.
 - We can also work together on **UI/UX, branding, product ideas, business planning, pricing, marketing, customer requirements, and future features**.
 - If you have experience or interest in **transportation, logistics, fleet management, business, design, sales**, or anything related, your experience can be very useful.
+ 
 
 
 ### 8.4 How you can participate (non-technical people)
 
 You do not need to read code to make a real difference:
 
-- **Test and report.** Use the live map, zones, and alerts. When something looks wrong, tell the team exactly what you did and what you saw (screenshots help a lot).
-- **Give real-world feedback.** Tell the Product Owner what feels natural and what feels awkward. You are the expert on your fleet.
+- **Test and report.** Use the live map, zones, and alerts. When something looks wrong, tell the team exactly what you did and what you saw (screenshots help a lot). We will prepare a platform for test and observation logs when we kick-start.
+- **Give real-world feedback.** Report what feels natural and what feels awkward. You are the expert on your fleet.
 - **Define rules and thresholds.** The system only works well with real numbers — your speed limits, your battery expectations, the color and the layout, the flow of a process, your "offline" timeouts. These are business decisions, not technical ones.
 - **Help shape the product and the brand.** UI/UX, branding (name is Navon — logo, colors, and fonts are still open), product ideas, business planning, pricing, marketing, and customer requirements all need real input.
 - **Request improvements.** Every idea goes on the priority list. Not everything is built immediately, but everything is heard and ranked.
@@ -252,7 +253,7 @@ Going forward, we also want to change how the project is presented. In earlier n
 - Questions are always welcome — there are no silly questions in this project. If you are unsure, ask.
 
 ### 8.7 Personal opinion
-The main goal at this point is to bring together people who are genuinely interested in the project, show what has already been done, get honest feedback, and decide what we should focus on next. I also want everyone to feel free to participate only if they are truly interested in the idea and willing to contribute. There should be no pressure to join because of possible future profit, expectations from others, or simply because friends are involved.I really want to stress this point because we may have some people in our circle who are a bit "officious" and tend to push their opinions or ideas onto others. At the same time, we may also have people who are push-overs who are more likely to simply follow whatever they are told. I don't want either of these situations to influence anyone's decision to participate. Everyone should feel free to make their own decision based on their genuine interest in the project, not because of pressure from others, friendship, or the expectation of future profit...
+The main goal at this point is to bring together people who are **genuinely interested** in the project, show what has already been done, get honest feedback, and decide what we should focus on next. I also want everyone to feel free to participate only if they are truly interested in the idea and willing to contribute. There should be no pressure to join because of possible future profit, expectations from others, or simply because friends are involved. I really want to stress this point because we may have some people in our circle who are a bit "officious" and tend to push their opinions or ideas onto others. At the same time, we may also have people who are push-overs who are more likely to simply follow whatever they are told. I don't want either of these situations to influence anyone's decision to participate. Everyone should feel free to make their own decision based on their genuine interest in the project, not because of pressure from others, friendship, or the expectation of future profit...
 
 
 ---
@@ -289,18 +290,17 @@ What should we do next?
 
 ## 10. Questions to Move the Project Forward
 
-The project is beyond the "what is it" stage, but a number of decisions still need to be made together. Use these as a discussion agenda — pick a theme per meeting, or split the questions among the team and compare answers.
+The project is beyond the "what is it" stage, but a number of decisions still need to be made together. Here is chatgpt's pick important question needs to be answered indevidually/group. We can use these as a discussion agenda.
 
 ### 10.1 Brand & identity
 
-- What should the project be called? — **decided: Navon** (note: `navon.com` is unavailable, so the web address is still open)
+- What should the project be called? — **Duka is suggested** (note: `duka.com` is unavailable, so the web address is still open)
 - Who is the brand for?
 - What should be the brand color and theme?
 - What should people understand when they first hear about it?
 - What values should the brand represent?
 - What should the visual identity look and feel like?
 - What should make the project recognizable?
-- Who should help decide the name and branding?
 - What should we prepare before presenting the project publicly?
 
 ### 10.2 Vision, funding & costs
