@@ -103,11 +103,11 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 
 
 ### Planned improvements (short to medium term)
-- Validate remote commands (CPU reset, settings via the mobile/data connection) with real trackers on the road.
+- Admin and systemadmin dashbaord
+-  Validate remote commands (CPU reset, settings via the mobile/data connection) with real trackers on the road.
 - Fine-tune driving alerts (hard acceleration/braking/curve) using real driving data.
 - Round out reports and exports** so management can pull data easily.
 - Fuel-consumption estimation
-- Driver behavior scoring and ranking (using smart analysis)
 - Route optimization
 - Scheduled maintenance alerts (service reminders)
 - Multi-language support (Afan Oromo, Amharic, …)
@@ -117,13 +117,16 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 - Live dashboard analytics charts and geofence heatmaps
 - Two-factor authentication and audit trails for admins
 - Integration with more devices
+- CAN-bus GPSs addition
+- Customer/CRM management built into the platform  
+
 
 ### Bigger ideas (long term)
 
-- OBD-II engine data extensions
-- Customer/CRM management built into the platform
 - Full Fleet management system
 - Integration with ERP systems (Erpnext, Odoo...)
+- Driver behavior scoring and ranking (ML & AI)
+
 
 > **How to add to this list:** the Product Owner collects and prioritizes requests. See [Working Together](#8-working-together) for how to raise an idea.
 
@@ -133,14 +136,14 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 
 ### 7.1 Get an account
 
-1. Open the app or website and click **Create One**. (http://akako.net:8082/)
+1. Open the app or website and click **Create One**. 
 2. Enter your email, a password, and your name.
 3. You are logged in automatically. Until a Company Admin links you to a company, you will see an empty map.
 
 ### 7.2 First-time setup (System Administrator)
 
 1. Sign in with the administrator account that is created automatically on first start.
-   (Username: admin@gpstracker.local, Password: P@ssw0rd)
+   (Username: admin@navon.com, Password: P@ssw0rd)
 2. **Create a company** for each customer/organization: `Administration → Companies → Create`.
 3. **Tune company rules** — how many minutes before a vehicle is considered "offline", and how much of a pause splits one trip from the next.
 4. **Assign a Company Admin** to each company (users must register first — see 7.1).
@@ -193,7 +196,7 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 
 ## 8. Working Together
 
-A project succeeds when everyone — technical and non-technical — knows their part. Here is how a typical software team runs.
+A project succeeds when everyone, technical and non-technical, knows their part. Here is how a typical software team runs.
 
 ### 8.1 Who is on the team
 
