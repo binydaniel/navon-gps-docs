@@ -3,8 +3,8 @@
 
 ## Project Overview
 
-Navon - is a fleet-tracking initiative documented for anyone interested in understanding the project without 
-technical implementation details. This document outlines what has been completed, what remains to be done, 
+Navon - is a fleet-tracking initiative documented for anyone interested in understanding the project. 
+This document outlines what has been completed, what remains to be done, 
 and the opportunities for collaboration. We welcome ideas, advice, business expertise, partnerships, funding, 
 and other contributions as we explore team formation, branding, organization, and the future direction of the project. 
 This is a work in progress (including these documents) and will evolve as we learn and collaborate.
