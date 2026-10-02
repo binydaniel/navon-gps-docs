@@ -34,6 +34,16 @@ Imagine you manage a fleet of delivery vans, service cars, or construction truck
 
 The system is designed from the ground up for **multiple companies (tenants)**. Each customer or organization has its own private area, its own vehicles, drivers, settings, and alerts — while a system administrators can manage companies and devices registry.
 
+## What is GPS device
+   *Coming up*
+
+GPS device types:
+    *Coming up*
+    
+ Difference between GPS devices with specification
+    *Teletonica*
+    *UniGuard*
+
 ### Why it matters
 
 - **Safety** — spot dangerous driving before it causes an accident.
@@ -104,9 +114,9 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 
 ### Planned improvements (short to medium term)
 - Admin and systemadmin dashbaord
--  Validate remote commands (CPU reset, settings via the mobile/data connection) with real trackers on the road.
+- Validate remote commands (CPU reset, settings via the mobile/data connection) with real trackers on the road.
 - Fine-tune driving alerts (hard acceleration/braking/curve) using real driving data.
-- Round out reports and exports** so management can pull data easily.
+- Reports and exports so management can pull data easily.
 - Fuel-consumption estimation
 - Route optimization
 - Scheduled maintenance alerts (service reminders)
@@ -116,16 +126,18 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 - Data export (CSV/Excel/PDF)
 - Live dashboard analytics charts and geofence heatmaps
 - Two-factor authentication and audit trails for admins
-- Integration with more devices
+- Integration with multiple GPS devices
 - CAN-bus GPSs addition
-- Customer/CRM management built into the platform  
+- Customer/CRM management built into the platform
+- SMS integration (notification, OTP, ...)
 
 
 ### Bigger ideas (long term)
 
 - Full Fleet management system
 - Integration with ERP systems (Erpnext, Odoo...)
-- Driver behavior scoring and ranking (ML & AI)
+- Driver behavior scoring and ranking (ML/AI)
+- Route pattern recognitions per user or company vehicles (ML/AI) 
 
 
 > **How to add to this list:** the Product Owner collects and prioritizes requests. See [Working Together](#8-working-together) for how to raise an idea.
@@ -136,6 +148,10 @@ These will be the upcoming agreed-upon next steps. They help the team know what 
 
 ### 7.1 Get an account
 
+## Note: This was deployed in a VPS server but its taken down now until we get our own (after lak lak and domain name is selected)
+
+*screenshots images/video walkthrough coming up* 
+ 
 1. Open the app or website and click **Create One**. 
 2. Enter your email, a password, and your name.
 3. You are logged in automatically. Until a Company Admin links you to a company, you will see an empty map.
@@ -465,6 +481,8 @@ Because we control the platform ourselves, running costs are mainly the server a
 ---
 
 ## 13. Where to Go for More
+
+### Glossary
 
 - **[Technical Documentation](TECHNICAL.md)** — architecture, APIs, database, and deployment, for the technical team.
   
